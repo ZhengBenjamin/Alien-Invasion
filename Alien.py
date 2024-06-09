@@ -5,6 +5,8 @@ class Alien:
     self.health = health
     self.speed = speed
     self.reward = reward
+    self.xVel = 0
+    self.yVel = 0
 
   # Getter methods
   
@@ -17,5 +19,15 @@ class Alien:
   def getReward(self):
     return self.reward
   
-  # Main methods
+  # Movement methods
+
+  def move(self, dx, dy):
+    self.rect.x += dx
+    self.rect.y += dy
+
+  def moveLeft(self, vel):
+    self.xVel = -vel
+
+  def moveRight(self, vel):
+    self.yVel = vel
 

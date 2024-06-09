@@ -26,4 +26,16 @@ class Tower:
   def attack(self):
     pass
 
+  class BombTower(Tower):
+    def __init__(self):
+      super().__init__(range=3, damage=5, splashDmg=True, cost=100)
+
+  class Cannon(Tower):
+    def __init__(self):
+      super().__init__(range=5, damage=5, splashDmg=False, cost=150)
+  
+  class TomatoLauncher(Tower):
+    def __init__(self):
+      super().__init__(range=5, damage=15, splashDmg=True, cost=200)
+
   
