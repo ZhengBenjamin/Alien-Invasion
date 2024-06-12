@@ -11,7 +11,11 @@ pygame.display.set_caption("Tower Defense") # Title of window
 WIDTH, HEIGHT = 1000, 800 # Window Size
 FPS = 120 # Frames per second
 
+level = [] # List of all levels
+towers = [] # List of all towers TODO: Make sure to append towers to this list
 aliens = [] # List of all aliens TODO: Make sure to append aliens to this list
+
+level.append([0, 100, "right"], [400, 100, "down"], [400, 500, "right"], [800, 500, "up"], [800, 0, "end"])
 
 window = pygame.display.set_mode((WIDTH, HEIGHT)) # Window
 
