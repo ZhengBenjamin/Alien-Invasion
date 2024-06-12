@@ -1,34 +1,37 @@
 import pygame
 import os
-
-for file in os.listdir("towers"):
-  from file import *
-
+from Alien import *
+from Tower import *
+from Shop import *
 
 pygame.init()
-
 pygame.display.set_caption("Tower Defense") # Title of window
 
 # Global variables
 WIDTH, HEIGHT = 1000, 800 # Window Size
 FPS = 120 # Frames per second
 
+aliens = [] # List of all aliens TODO: Make sure to append aliens to this list
+
 window = pygame.display.set_mode((WIDTH, HEIGHT)) # Window
 
 # This method draws the window; Call draw for all objects here
 def draw():
-
-
+  for alien in aliens:
+    alien.update(window) 
+ 
   pygame.display.update() # Update the window
 
 
 # This main method contains the loop of the game
 def main(window):
   clock = pygame.time.Clock()
-  
+
   run = True
   while run:
     clock.tick(FPS)
+
+    window.fill((0, 0, 0))
 
     for event in pygame.event.get(): # If the user closes the window, quit program
       if event.type == pygame.QUIT:
@@ -37,5 +40,9 @@ def main(window):
     
     draw()
 
+# Testing
+testObject = Slime(40, 40)
+aliens.append(testObject)
 
 main(window)
+
