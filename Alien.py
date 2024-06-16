@@ -1,26 +1,28 @@
-# Alien superclass, parent class for all the alien types in the game.
+# Alien superclass, parent class for al lthe alien types in the game 
 import pygame
 import os
-class Alien:
+
+class Alien(pygame.sprite.Sprite):
   
-  # Constructor (int, int, int, int, List, String)
-  def __init__(self, health, speed, reward, path, img):
-    self.rect = pygame.Rect(0, 0, 32, 32) # Rectangular hitbox
+  def __init__ (self, health, speed, reward, path, image): 
+    pygame.sprite.Sprite.__init__(self)
+
+    self.rect = pygame.Rect(path[0][0], path[0][1], 32, 32) # Rectangular Hitbox 
     self.health = health # Health of the alien
     self.speed = speed # Speed of the alien
     self.reward = reward # Reward for killing the alien
-    self.x = path[1][0]
-    self.y = path[1][1] 
+    self.path = path # Path the alien will follow
+    self.image = image # Image of the alien
     self.width = 32
-    self.height = 32 
-    self.img = img # Image of the alien
-    self.velocity = [0, 0] # Initial velocity
-    self.turn = 0 # Current turn in the path
-    self.path = path # Path of the alien
+    self.height = 32
+    self.velocity = [0, 0] # Starting velocity of the alien
+    self.turn = 0 # Number of turns on path
+    self.path = path # Path the alien will follow
     self.currentDirection = path[0][2] # Current direction of the alien
+    self.progress = 0 # Progress on the path
 
   # Getter methods
-  
+
   def getHealth(self):
     return self.health
   
@@ -33,28 +35,35 @@ class Alien:
   def getPath(self):
     return self.path
   
+  def getVelocity(self):
+    return self.velocity
+  
   def getPos(self):
-    return self.x, self.y
+    return self.rect.center
+  
+  def getRect(self):
+    return self.rect
+  
+  # Render Methods
 
-  # Render methods
-
-  def draw(self, window): # Draw the alien
-    window.blit(pygame.transform.scale(self.img, (self.width, self.height)), (self.x - self.width/2, self.y-self.height/2))
+  def draw(self, window):
+    window.blit(self.image, self.rect.topleft)
 
   def update(self, window):
+    self.progress += self.speed
     self.updatePath()
     self.move(self.velocity[0], self.velocity[1])
     self.draw(window)
 
-  # Movement methods
+  # Movement Methods
 
-  def move(self, dx, dy):
-    self.x += dx
-    self.y += dy
-    
+  def move(self, x, y):
+    self.rect.x += x
+    self.rect.y += y
+
   def moveRight(self):
     self.velocity[0] = self.speed
-  
+
   def moveLeft(self):
     self.velocity[0] = -self.speed
 
@@ -84,11 +93,11 @@ class Alien:
     # Remaining Paths
     if self.turn < len(self.path):
       if self.currentDirection in ["left", "right"]:
-        if self.x == self.path[self.turn][0]:
+        if self.rect.x == self.path[self.turn][0]:
           self.calcNextPath()
           self.turn += 1
       elif self.currentDirection in ["up", "down"]:
-        if self.y == self.path[self.turn][1]:
+        if self.rect.y == self.path[self.turn][1]:
           self.calcNextPath()
           self.turn += 1
 
@@ -109,7 +118,6 @@ class Alien:
         self.moveDown()
         self.currentDirection = "down"
     return
-  
 
 
 # Alien subclasses

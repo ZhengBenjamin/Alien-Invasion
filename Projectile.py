@@ -13,6 +13,7 @@ class Projectile:
     self.damage = damage # Damage of projectile
     self.target = target # Target of projectile
     self.velocity = [0, 0] # Initial velocity
+    self.collide = False # If the projectile has collided with the target
     self.show = True 
     self.img = img 
 
@@ -48,16 +49,21 @@ class Projectile:
   def moveDown(self):
     self.velocity[1] = self.speed
 
-  # Render methods:
+  # Render methods: 
 
   def draw(self, window):
     window.blit(pygame.transform.scale(self.img, (self.width, self.height)), (self.x - self.width/2, self.y - self.width/2))
 
   def update(self, window):
-    self.updatePath()
-    self.move(self.velocity[0], self.velocity[1])
-    self.draw(window)
 
+    #if self.collide == False: 
+      self.updatePath()
+      self.move(self.velocity[0], self.velocity[1])
+      self.draw(window)
+    #else: 
+      #self.show = False
+
+  # TODO: Projectile pathfinding is dookie :D fix later 
   def updatePath(self):
     targetX, targetY = self.target.getPos()
     if targetX > self.x:
@@ -69,7 +75,6 @@ class Projectile:
     if targetY < self.y:
       self.moveUp()
     
-  
 
 # Alien subclasses
 

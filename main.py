@@ -19,7 +19,7 @@ aliens = [] # List of all aliens TODO: Make sure to append aliens to this list
 projectiles = [] # List of all projectiles TODO: Make sure to append projectiles to this list
 
 # Level layout: [[start], [verticies]]: [[startingDirection], [x, y, nextDirection]]
-maps.append([[200, 200, "right"], [400, 200, "down"], [400, 600, "right"], [800, 600, "up"]])
+maps.append([[100, 200, "right"], [400, 200, "down"], [400, 600, "right"], [800, 600, "up"]])
 
 window = pygame.display.set_mode((WIDTH, HEIGHT)) # Window
 
