@@ -3,6 +3,7 @@ import pygame
 import os
 class Alien:
   
+  # Constructor (int, int, int, int, List, String)
   def __init__(self, health, speed, reward, path, img):
     self.rect = pygame.Rect(0, 0, 32, 32) # Rectangular hitbox
     self.health = health # Health of the alien
@@ -31,11 +32,14 @@ class Alien:
   
   def getPath(self):
     return self.path
+  
+  def getPos(self):
+    return self.x, self.y
 
   # Render methods
 
   def draw(self, window): # Draw the alien
-    window.blit(pygame.transform.scale(self.img, (self.width, self.height)), (self.x, self.y))
+    window.blit(pygame.transform.scale(self.img, (self.width, self.height)), (self.x - self.width/2, self.y-self.height/2))
 
   def update(self, window):
     self.updatePath()
@@ -79,16 +83,12 @@ class Alien:
 
     # Remaining Paths
     if self.turn < len(self.path):
-      print(self.turn, self.currentDirection)
       if self.currentDirection in ["left", "right"]:
         if self.x == self.path[self.turn][0]:
-          print("Turn index = " + str(self.turn) + " x: " + str(self.x))
           self.calcNextPath()
           self.turn += 1
       elif self.currentDirection in ["up", "down"]:
-        print("dected down")
         if self.y == self.path[self.turn][1]:
-          print("Turn index = " + str(self.turn) + " y: " + str(self.y))
           self.calcNextPath()
           self.turn += 1
 
@@ -99,19 +99,15 @@ class Alien:
       case "right":
         self.moveRight()
         self.currentDirection = "right"
-        print("Moving right " + str(self.currentDirection))
       case "left":
         self.moveLeft()
         self.currentDirection = "left"
-        print("Moving left"+ str(self.currentDirection))
       case "up":
         self.moveUp()
         self.currentDirection = "up"
-        print("Moving up"+ str(self.currentDirection))
       case "down":
         self.moveDown()
         self.currentDirection = "down"
-        print("Moving down"+ str(self.currentDirection))
     return
   
 
