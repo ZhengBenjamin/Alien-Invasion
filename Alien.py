@@ -21,7 +21,7 @@ class Alien(pygame.sprite.Sprite):
     self.currentDirection = path[0][2] # Current direction of the alien
     self.progress = 0 # Progress on the path
 
-  # Getter methods
+  # Getter / Setter methods
 
   def getHealth(self):
     return self.health
@@ -44,16 +44,22 @@ class Alien(pygame.sprite.Sprite):
   def getRect(self):
     return self.rect
   
+  def hit(self, damage):
+    self.health -= damage
+
   # Render Methods
 
   def draw(self, window):
     window.blit(self.image, self.rect.topleft)
 
   def update(self, window):
-    self.progress += self.speed
-    self.updatePath()
-    self.move(self.velocity[0], self.velocity[1])
-    self.draw(window)
+    if self.health > 0:
+      self.progress += self.speed
+      self.updatePath()
+      self.move(self.velocity[0], self.velocity[1])
+      self.draw(window)
+    else:
+      self.kill()
 
   # Movement Methods
 

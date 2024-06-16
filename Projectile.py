@@ -4,11 +4,10 @@ import os
 class Projectile(pygame.sprite.Sprite):
   
   # Constructor (int, int, int, int, Alien, String)
-  def __init__(self, x, y, speed, damage, target, img):
+  def __init__(self, x, y, speed, damage, target, image):
     pygame.sprite.Sprite.__init__(self)
 
-    self.x = x # Position of projectile on map
-    self.y = y
+    self.rect = pygame.Rect(x, y, 10, 10) # Rectangular hitbox
     self.width = 10 # Size of projectile
     self.height = 10
     self.speed = speed # Speed of projectile
@@ -16,8 +15,7 @@ class Projectile(pygame.sprite.Sprite):
     self.target = target # Target of projectile
     self.velocity = [0, 0] # Initial velocity
     self.collide = False # If the projectile has collided with the target
-    self.show = True 
-    self.img = img 
+    self.image = image
 
   # Getter methods:
 
@@ -36,8 +34,8 @@ class Projectile(pygame.sprite.Sprite):
   # Movement methods:
 
   def move(self, dx, dy):
-    self.x += dx
-    self.y += dy
+    self.rect.x += dx
+    self.rect.y += dy
   
   def moveRight(self):
     self.velocity[0] = self.speed
@@ -54,33 +52,38 @@ class Projectile(pygame.sprite.Sprite):
   # Render methods: 
 
   def draw(self, window):
-    window.blit(pygame.transform.scale(self.img, (self.width, self.height)), (self.x - self.width/2, self.y - self.width/2))
+    window.blit(self.image, self.rect.topleft)
 
   def update(self, window):
+    self.checkCollide()
 
-    #if self.collide == False: 
+    if self.collide == False: 
       self.updatePath()
       self.move(self.velocity[0], self.velocity[1])
       self.draw(window)
-    #else: 
-      #self.show = False
+    else: 
+      self.target.hit(self.damage)
+      self.kill()
 
   # TODO: Projectile pathfinding is dookie :D fix later 
   def updatePath(self):
     targetX, targetY = self.target.getPos()
-    if targetX > self.x:
+    if targetX > self.rect.x:
       self.moveRight()
-    if targetX < self.x:
+    if targetX < self.rect.x:
       self.moveLeft()
-    if targetY > self.y:
+    if targetY > self.rect.y:
       self.moveDown()
-    if targetY < self.y:
+    if targetY < self.rect.y:
       self.moveUp()
+    
+  def checkCollide(self):
+    self.collide = self.rect.colliderect(self.target.getRect())
     
 
 # Alien subclasses
 
 class CannonProj(Projectile):
   def __init__(self, x, y, target):
-    super().__init__(x, y, 7, 5, target, pygame.image.load("assets/cannonBall.png"))
+    super().__init__(x, y, 3, 5, target, pygame.image.load("assets/cannonBall.png"))
   
