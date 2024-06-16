@@ -35,10 +35,14 @@ def draw():
 # Main game loop
 def main(window):
   clock = pygame.time.Clock()
+  timer = 0
+  projTimer = 0
 
   run = True
   while run:
-    clock.tick(FPS)
+    dt = clock.tick(FPS) / 1000
+    timer += dt
+    projTimer += dt
 
     window.fill((0, 0, 0))
 
@@ -47,15 +51,29 @@ def main(window):
         run = False
         break
     
+    if timer > 0.5:
+      startSpawn(10)
+      timer = 0
+    
+    if projTimer > 0.2:
+      startProj()
+      projTimer = 0
+
+
     draw()
 
 # Spawning aliens
 
 def startSpawn(level):
-  pass
+  aliens.add(Slime(maps[0]))
+  
+def startProj():
+  if len(aliens.sprites()) > 0:
+    projectiles.add(CannonProj(500, 500, aliens.sprites()[0]))
+    
 
-aliens.add(Slime(maps[0]))
-projectiles.add(CannonProj(500, 500, aliens.sprites()[0]))
+#aliens.add(Slime(maps[0]))
+#projectiles.add(CannonProj(500, 500, aliens.sprites()[0]))
 main(window)
 
 

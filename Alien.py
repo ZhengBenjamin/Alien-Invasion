@@ -130,7 +130,7 @@ class Alien(pygame.sprite.Sprite):
 
 class Slime(Alien):
   def __init__(self, path):
-    super().__init__(5, 2, 10, path, pygame.image.load("assets/slime.png"))
+    super().__init__(15, 2, 10, path, pygame.image.load("assets/slime.png"))
 
 class BobaAlien(Alien):
   def __init__(self, path):
