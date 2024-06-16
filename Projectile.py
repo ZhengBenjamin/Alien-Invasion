@@ -1,10 +1,12 @@
 import pygame
 import os 
 
-class Projectile:
+class Projectile(pygame.sprite.Sprite):
   
   # Constructor (int, int, int, int, Alien, String)
   def __init__(self, x, y, speed, damage, target, img):
+    pygame.sprite.Sprite.__init__(self)
+
     self.x = x # Position of projectile on map
     self.y = y
     self.width = 10 # Size of projectile
