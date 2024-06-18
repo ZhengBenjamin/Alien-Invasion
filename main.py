@@ -36,7 +36,7 @@ def main(window):
   while run:
     clock.tick(FPS)
 
-    window.fill((0, 0, 0))
+    window.fill((255, 255, 255))
 
     for event in pygame.event.get(): # If the user closes the window, quit program
       if event.type == pygame.QUIT:
