@@ -81,7 +81,7 @@ class Projectile(pygame.sprite.Sprite):
     self.collide = self.rect.colliderect(self.target.getRect())
     
 
-# Alien subclasses
+# Projectile subclasses
 
 class CannonProj(Projectile):
   def __init__(self, x, y, target):

@@ -44,6 +44,9 @@ class Alien(pygame.sprite.Sprite):
   def getRect(self):
     return self.rect
   
+  def getProgress(self):
+    return self.progress
+  
   def hit(self, damage):
     self.health -= damage
 

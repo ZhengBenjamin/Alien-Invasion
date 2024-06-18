@@ -24,9 +24,9 @@ class Level:
     
     self.timer = 0
     self.lastSpawn = pygame.time.get_ticks()
-    self.spawnRate = 1000
+    self.spawnRate = 650
 
-    self.addTower(Cannon())
+    self.addTower(Cannon(self))
 
   # Getter / Setter methods
   def getLevel(self):
@@ -43,6 +43,9 @@ class Level:
   
   def getTowers(self):
     return self.towers
+  
+  def getAliens(self):
+    return self.aliens
 
   def addTower(self, tower):
     self.towers.add(tower)
@@ -54,8 +57,8 @@ class Level:
   def draw(self, window):
     self.startSpawn()
     self.aliens.update(window)
-    self.projectiles.update(window)
     self.towers.update(window)
+    self.projectiles.update(window)
 
   def startSpawn(self):
     currentTime = pygame.time.get_ticks()
