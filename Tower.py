@@ -1,13 +1,20 @@
+import pygame
+import os
+from Projectile import *
+
 # Superclass for all towers
-class Tower:
+class Tower(pygame.sprite.Sprite):
   
-  def __init__(self, range, damage, splashDmg, cost):
+  def __init__(self, xPos, yPos, range, damage, splashDmg, cost):
+    pygame.sprite.Sprite.__init__(self)
+
+    self.rect = pygame.Rect(xPos, yPos, 32, 32)
     self.range = range
     self.damage = damage
     self.splashDmg = splashDmg
     self.cost = cost
 
-  # Getter methods 
+  # Getter / Setter methods 
   
   def getRange(self):
     return self.range
@@ -23,8 +30,9 @@ class Tower:
   
   # Main methods
   
-  def attack(self):
-    pass
+  def attack(self, alien):
+    CannonProj(500, 500, alien)
+    
 
 class BombTower(Tower):
   def __init__(self):
