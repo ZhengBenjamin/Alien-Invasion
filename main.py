@@ -30,6 +30,9 @@ def main(window):
     # Load images
     map_img = pg.image.load(os.path.join('assets', 'map.png')).convert_alpha()  # Ensure the correct path
 
+    # Scale the map image to fit the window
+    map_img = pg.transform.scale(map_img, (WIDTH, HEIGHT))
+
     # Create a Map object
     game_map = Map(map_image=map_img)  # Pass the map image to the Map object
 
