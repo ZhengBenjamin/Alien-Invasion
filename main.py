@@ -1,6 +1,5 @@
 import pygame
 import os
-import random
 from Alien import *
 from Tower import *
 from Shop import *
@@ -8,25 +7,36 @@ from Projectile import *
 from Level import *
 
 pygame.init()
-pygame.display.set_caption("Tower Defense") # Title of window
+pygame.display.set_caption("Tower Defense")  # Title of window
 
 # Global variables
-WIDTH, HEIGHT = 1000, 800 # Window Size
-FPS = 120 # Frames per second
-window = pygame.display.set_mode((WIDTH, HEIGHT)) # Window
-currentLevel = 1 # Current level
-level = Level(currentLevel) # Level object
+WIDTH, HEIGHT = 1000, 800  # Window Size
+FPS = 120  # Frames per second
+window = pygame.display.set_mode((WIDTH, HEIGHT))  # Window
+currentLevel = 1  # Current level
+level = Level(currentLevel)  # Level object
+
+# Load the map image
+map_img = pygame.image.load(os.path.join('assets', 'map.png')).convert_alpha()
+map_img = pygame.transform.scale(map_img, (WIDTH, HEIGHT))  # Scale map image to fit the window
 
 # Maps
-# Map layout: [[start], [verticies]]: [[startingDirection], [x, y, nextDirection]]
-maps = [] # List of all maps
+# Example map layout: [[start], [vertices]]: [[startingDirection], [x, y, nextDirection]]
+maps = []
 maps.append([[200, 200, "right"], [400, 200, "down"], [400, 600, "right"], [800, 600, "up"]])
 
 # Draws the window and updates the sprites
 def draw():
-  level.draw(window)
-  pygame.display.update() # Update the window
+    window.fill((255, 255, 255))  # Clear the window with white
 
+    # Draw the map
+    window.blit(map_img, (0, 0))
+
+    # Draw other game elements (aliens, towers, etc.)
+    level.draw(window)
+
+    # Update the window
+    pygame.display.update()
 
 # Main game loop
 def main(window):
@@ -46,5 +56,3 @@ def main(window):
     draw()
     
 main(window)
-
-
