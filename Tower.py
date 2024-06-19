@@ -16,10 +16,11 @@ class Tower(pygame.sprite.Sprite):
     self.image = image # Image of the tower
     self.placed = False # If the tower has been placed
     self.level = level # Level object
+    self.attackSpeed = attackSpeed # Attack speed of the tower
 
+    # Temp for testing. Used for timing of attacks 
     self.timer = 0
     self.lastShot = pygame.time.get_ticks()
-    self.attackSpeed = attackSpeed
 
   # Getter / Setter methods 
   

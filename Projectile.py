@@ -8,8 +8,6 @@ class Projectile(pygame.sprite.Sprite):
     pygame.sprite.Sprite.__init__(self)
 
     self.rect = pygame.Rect(x, y, 10, 10) # Rectangular hitbox
-    self.width = 10 # Size of projectile
-    self.height = 10
     self.speed = speed # Speed of projectile
     self.damage = damage # Damage of projectile
     self.target = target # Target of projectile

@@ -18,10 +18,11 @@ class Level:
     self.towers = towers
 
     # Maps
-    # Level layout: [[start], [verticies]]: [[startingDirection], [x, y, nextDirection]]
+    # Map layout: [[start], [verticies]]: [[startingDirection], [x, y, nextDirection]]
     self.maps = []
     self.maps.append([[200, 200, "right"], [400, 200, "down"], [400, 600, "right"], [800, 600, "up"]])
     
+    # Temp for testing. Used for timing of spawns
     self.timer = 0
     self.lastSpawn = pygame.time.get_ticks()
     self.spawnRate = 650
@@ -30,7 +31,7 @@ class Level:
 
   # Getter / Setter methods
   def getLevel(self):
-    return self.level
+    return self
   
   def getNumAliens(self):
     return len(self.aliens.sprites())
@@ -60,6 +61,7 @@ class Level:
     self.towers.update(window)
     self.projectiles.update(window)
 
+  # Temp for testing. Used to spawn aliens 
   def startSpawn(self):
     currentTime = pygame.time.get_ticks()
 

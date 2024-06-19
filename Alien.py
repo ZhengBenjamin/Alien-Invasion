@@ -13,11 +13,8 @@ class Alien(pygame.sprite.Sprite):
     self.reward = reward # Reward for killing the alien
     self.path = path # Path the alien will follow
     self.image = image # Image of the alien
-    self.width = 32
-    self.height = 32
     self.velocity = [0, 0] # Starting velocity of the alien
-    self.turn = 0 # Number of turns on path
-    self.path = path # Path the alien will follow
+    self.turn = 0 # Turn number on path
     self.currentDirection = path[0][2] # Current direction of the alien
     self.progress = 0 # Progress on the path
 
