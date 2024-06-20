@@ -130,20 +130,16 @@ class Alien(pygame.sprite.Sprite):
 
 class Slime(Alien):
   def __init__(self, path):
-    super().__init__(15, 2, 10, path, pygame.image.load("assets/slime.png"))
+    super().__init__(15, 2, 10, path, pygame.image.load("assets/aliens/slime.png"))
 
 class BobaAlien(Alien):
   def __init__(self, path):
-    super().__init__(10, 1, 20, path, pygame.image.load("assets/boba.png"))
+    super().__init__(10, 1, 20, path, pygame.image.load("assets/aliens/boba.png"))
 
 class BigDaddyBen(Alien):
   def __init__(self, path):
-    super().__init__(20, 1, 40, path, pygame.image.load("assets/bigDaddyBen.png"))
+    super().__init__(20, 1, 40, path, pygame.image.load("assets/aliens/bigDaddyBen.png"))
 
 class SkateboardAlien(Alien):
   def __init__(self, path):
-    super().__init__(15, 3, 30, path, pygame.image.load("assets/skateboardAlien.png"))
-
-class Healer(Alien):
-  def __init__(self, path):
-    super().__init__(10, 1, 20, path, pygame.image.load("assets/healer.png"))
+    super().__init__(15, 3, 30, path, pygame.image.load("assets/aliens/skateboard.png"))

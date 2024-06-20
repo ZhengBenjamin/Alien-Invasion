@@ -10,20 +10,15 @@ pygame.init()
 pygame.display.set_caption("Tower Defense")  # Title of window
 
 # Global variables
-WIDTH, HEIGHT = 1000, 800  # Window Size
+WIDTH, HEIGHT = 1300, 800  # Window Size
 FPS = 120  # Frames per second
 window = pygame.display.set_mode((WIDTH, HEIGHT))  # Window
 currentLevel = 1  # Current level
-level = Level(currentLevel)  # Level object
+shop = Shop()  # Shop object
 
 # Load the map image
 map_img = pygame.image.load(os.path.join('assets', 'map.png')).convert_alpha()
 map_img = pygame.transform.scale(map_img, (WIDTH, HEIGHT))  # Scale map image to fit the window
-
-# Maps
-# Example map layout: [[start], [vertices]]: [[startingDirection], [x, y, nextDirection]]
-maps = []
-maps.append([[200, 200, "right"], [400, 200, "down"], [400, 600, "right"], [800, 600, "up"]])
 
 # Draws the window and updates the sprites
 def draw():
@@ -33,7 +28,7 @@ def draw():
     window.blit(map_img, (0, 0))
 
     # Draw other game elements (aliens, towers, etc.)
-    level.draw(window)
+    shop.draw(window)
 
     # Update the window
     pygame.display.update()

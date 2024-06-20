@@ -3,19 +3,21 @@ import pygame
 import os
 from Alien import *
 from Tower import *
-from Shop import *
 from Projectile import *
 
 class Level:
   
-  def __init__(self, level, towers=pygame.sprite.Group()):
+  def __init__(self, shop, towers=pygame.sprite.Group()):
   
-    self.level = level
+    self.shop = shop
+    self.level = shop.getLevel()
 
     # Sprite Groups
     self.aliens = pygame.sprite.Group()
     self.projectiles = pygame.sprite.Group()
     self.towers = towers
+    self.lost = False 
+    self.complete = False
 
     # Maps
     # Map layout: [[start], [verticies]]: [[startingDirection], [x, y, nextDirection]]
@@ -30,8 +32,6 @@ class Level:
     self.addTower(Cannon(self))
 
   # Getter / Setter methods
-  def getLevel(self):
-    return self
   
   def getNumAliens(self):
     return len(self.aliens.sprites())
@@ -47,6 +47,12 @@ class Level:
   
   def getAliens(self):
     return self.aliens
+  
+  def isComplete(self):
+    return self.complete
+  
+  def isLost(self):
+    return self.lost
 
   def addTower(self, tower):
     self.towers.add(tower)

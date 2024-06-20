@@ -87,9 +87,24 @@ class Tower(pygame.sprite.Sprite):
 
 class Cannon(Tower):
   def __init__(self, level):
-    super().__init__(5, 5, 300, 50, 250, level, pygame.image.load("assets/cannon.png"))
+    super().__init__(5, 5, 300, 50, 250, level, pygame.image.load("assets/towers/cannon.png"))
     self.level = level
   
   def shoot(self, x, y, target):
     self.level.addProjectile(CannonProj(x, y, target))
     
+class Bomber(Tower):
+  def __init__(self, level):
+    super().__init__(5, 5, 300, 50, 250, level, pygame.image.load("assets/towers/bomber.png"))
+    self.level = level
+  
+  def shoot(self, x, y, target):
+    self.level.addProjectile(BomberProj(x, y, target))
+
+class Catapult(Tower):
+  def __init__(self, level):
+    super().__init__(5, 5, 300, 50, 250, level, pygame.image.load("assets/towers/catapult.png"))
+    self.level = level
+  
+  def shoot(self, x, y, target):
+    self.level.addProjectile(CatapultProj(x, y, target))
