@@ -106,7 +106,7 @@ class Tower(pygame.sprite.Sprite):
 
 class Cannon(Tower):
   def __init__(self, level, active=True):
-    super().__init__(0, 0, 100, 10, 150, 1000, False, level, "Cannon", pygame.image.load("assets/towers/cannon.png"), active)
+    super().__init__(0, 0, 100, 10, 150, 500, False, level, "Cannon", pygame.image.load("assets/towers/cannon.png"), active)
     self.level = level
   
   def shoot(self, x, y, target):

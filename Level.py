@@ -52,6 +52,9 @@ class Level:
   def isLost(self):
     return self.lost
 
+  def addMoney(self, amount):
+    self.shop.addMoney(amount)
+
   def addTower(self, tower):
     self.towers.add(tower)
 
@@ -70,7 +73,7 @@ class Level:
     currentTime = pygame.time.get_ticks()
 
     if currentTime - self.lastSpawn > self.spawnRate:
-      self.aliens.add(Slime(self.maps[0]))
+      self.aliens.add(Slime(self.maps[0], self))
       self.lastSpawn = currentTime
 
 

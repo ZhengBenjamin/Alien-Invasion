@@ -12,7 +12,7 @@ class Shop:
     self.towers = pygame.sprite.Group() # List of towers
     self.selectedTower = None # Selected tower (for placement)
     self.levelObj = None # Level object
-    self.level = 1 # Current level
+    self.level = 0 # Current level
     self.events = None # Events
 
     self.towerCollection = [Cannon(None, False), Bomber(None, False), Catapult(None, False)]

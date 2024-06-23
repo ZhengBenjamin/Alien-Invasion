@@ -4,7 +4,7 @@ import os
 
 class Alien(pygame.sprite.Sprite):
   
-  def __init__ (self, health, speed, reward, path, image): 
+  def __init__ (self, health, speed, reward, path, level, image): 
     pygame.sprite.Sprite.__init__(self)
 
     self.rect = pygame.Rect(path[0][0], path[0][1], 32, 32) # Rectangular Hitbox 
@@ -13,6 +13,7 @@ class Alien(pygame.sprite.Sprite):
     self.reward = reward # Reward for killing the alien
     self.path = path # Path the alien will follow
     self.image = image # Image of the alien
+    self.level = level # Level object
     self.velocity = [0, 0] # Starting velocity of the alien
     self.turn = 0 # Turn number on path
     self.currentDirection = path[0][2] # Current direction of the alien
@@ -59,6 +60,7 @@ class Alien(pygame.sprite.Sprite):
       self.move(self.velocity[0], self.velocity[1])
       self.draw(window)
     else:
+      self.level.addMoney(self.reward)
       self.kill()
 
   # Movement Methods
@@ -129,16 +131,16 @@ class Alien(pygame.sprite.Sprite):
 # Alien subclasses
 
 class Slime(Alien):
-  def __init__(self, path):
-    super().__init__(15, 2, 10, path, pygame.image.load("assets/aliens/slime.png"))
+  def __init__(self, path, level):
+    super().__init__(15, 2, 10, path, level, pygame.image.load("assets/aliens/slime.png"))
 
 class BobaAlien(Alien):
-  def __init__(self, path):
-    super().__init__(10, 1, 20, path, pygame.image.load("assets/aliens/boba.png"))
+  def __init__(self, path, level):
+    super().__init__(10, 1, 20, path, level, pygame.image.load("assets/aliens/boba.png"))
 
 class BigDaddyBen(Alien):
-  def __init__(self, path):
-    super().__init__(20, 1, 40, path, pygame.image.load("assets/aliens/bigDaddyBen.png"))
+  def __init__(self, path, level):
+    super().__init__(20, 1, 40, path, level, pygame.image.load("assets/aliens/bigDaddyBen.png"))
 
 class SkateboardAlien(Alien):
   def __init__(self, path):
