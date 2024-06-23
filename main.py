@@ -46,6 +46,8 @@ def main(window):
     for event in pygame.event.get(): # If the user closes the window, quit program
       if event.type == pygame.QUIT:
         run = False
+      elif event.type == pygame.MOUSEBUTTONUP:
+        shop.handleSelection(event)
         break
 
     draw()

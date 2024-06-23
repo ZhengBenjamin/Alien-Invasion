@@ -29,8 +29,6 @@ class Level:
     self.lastSpawn = pygame.time.get_ticks()
     self.spawnRate = 650
 
-    self.addTower(Cannon(self))
-
   # Getter / Setter methods
   
   def getNumAliens(self):

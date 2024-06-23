@@ -13,6 +13,23 @@ class Shop:
     self.selectedTower = None # Selected tower (for placement)
     self.levelObj = None # Level object
     self.level = 1 # Current level
+    self.events = None # Events
+
+    self.towerCollection = [Cannon(None, False), Bomber(None, False), Catapult(None, False)]
+    self.towerButtons = self.makeTowerButtons(self.towerCollection)
+
+  # Helper methods for constructor 
+
+  # Creates the buttons for each of the towers
+  def makeTowerButtons(self, towerCollection):
+    yPos = 200 # Starting y position for the buttons
+    towerButtons = {}
+    for tower in towerCollection:
+      towerButtons.update({tower: pygame.Rect(self.rect.x + 10, yPos, 275, 100)})
+      yPos += 150
+
+    return towerButtons
+
 
   # Getter / Setter methods
 
@@ -34,6 +51,9 @@ class Shop:
   def getLevel(self):
     return self.level
   
+  def setEvents(self, events):
+    self.events = events
+  
   # Render methods
 
   def draw(self, window):
@@ -48,7 +68,6 @@ class Shop:
         self.level += 1
         self.startLevel()
     
-    #self.handleShop(self, window)
     self.levelObj.draw(window)
     self.shopGUI(window)
   
@@ -56,7 +75,7 @@ class Shop:
     yPos = 200 # Starting y position for the buttons
 
     # Draw the shop
-    window.blit(pygame.image.load("assets/shop.png"), self.rect.topleft)
+    window.blit(pygame.image.load("assets/shop/shop.png"), self.rect.topleft)
 
     # Draw the money
     font = pygame.font.Font(None, 36)
@@ -64,19 +83,28 @@ class Shop:
     window.blit(text, (10, 10))
 
     # Draw the buttons for each of the towers
-    for imageFile in os.listdir("assets/towers"):
-      name = Path(os.path.join("assets/towers", imageFile)).stem
-      image = pygame.image.load(os.path.join("assets/towers", imageFile))
-      self.drawTowerButton(window, image, name, yPos)
-      yPos += 150
+    for tower in list(self.towerButtons.keys()):
+      self.drawTowerButton(window, tower)
     
   # Renders the buttons to buy the towers
-  def drawTowerButton(self, window, image, name, yPos):
-    window.blit(image, (self.rect.x + 50, yPos))
-    font = pygame.font.Font(None, 36)
-    name = font.render(name, 1, (255, 255, 255))
-    window.blit(name, (self.rect.x + 100, yPos))
+  def drawTowerButton(self, window, tower):
+    # Draw button
+    button = self.towerButtons[tower]
 
+    window.blit(pygame.image.load("assets/shop/towerButton.png"), button.topleft)
+    tower.setPosition(button.x + 10, button.y + 24)
+    tower.draw(window)
+
+    font = pygame.font.Font(None, 18)
+    name = font.render("{}\nDamage: {}\nRange: {}\nCooldown: {}\nCost: {}".format(
+      tower.getName(), 
+      tower.getDamage(), 
+      tower.getRange(), 
+      tower.getAttackSpeed()/1000, 
+      tower.getCost()
+    ), 1, (255, 255, 255))
+    window.blit(name, (button.x + 50, button.y + 20))
+    
   # Main methods
 
   def startLevel(self):
@@ -85,7 +113,27 @@ class Shop:
   def selectTower(self, tower):
     self.selectedTower = tower 
   
-  def handleShop(self, window):
-    pass
+  def handleSelection(self, event):
+    if event.type == pygame.MOUSEBUTTONUP:
+      pos = pygame.mouse.get_pos()
+      for tower in list(self.towerButtons.keys()):
+        if self.towerButtons.get(tower).collidepoint(pos):
+          if self.money >= tower.getCost():
+            self.selectTower(tower)
+            self.deductMoney(tower.getCost())
+            self.addTower(tower)
+          else:
+            print("Not enough money")
 
+  def addTower(self, tower):
+    if tower.getName() == "Cannon":
+      self.towers.add(Cannon(self.levelObj))
+    elif tower.getName() == "Bomber":
+      self.towers.add(Bomber(self.levelObj))
+    elif tower.getName() == "Catapult":
+      self.towers.add(Catapult(self.levelObj))
+    else:
+      pass
     
+
+  

@@ -89,6 +89,6 @@ class BomberProj(Projectile):
   def __init__(self, x, y, target):
     super().__init__(x, y, 8, 5, target, pygame.image.load("assets/projectiles/bomberProj.png"))
 
-class Catapult(Projectile):
+class CatapultProj(Projectile):
   def __init__(self, x, y, target):
     super().__init__(x, y, 8, 5, target, pygame.image.load("assets/projectiles/catapultProj.png"))

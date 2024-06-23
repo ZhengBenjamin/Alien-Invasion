@@ -1,22 +1,27 @@
 import pygame
 import os
 from Projectile import *
+from typing import Type
 
 # Superclass for all towers
 class Tower(pygame.sprite.Sprite):
   
-  # Constructor (int, int, int, int, boolean, int, String, Level, String)
-  # Level = Level object, type = Type of tower in String
-  def __init__(self, xPos, yPos, range, cost, attackSpeed, level, image):
+  # Constructor
+  def __init__(self, xPos: int, yPos: int, cost: int, damage: int, range: int, attackSpeed: int, splashDamage: bool, level, name: str, image: str, active: bool):
     pygame.sprite.Sprite.__init__(self)
 
     self.rect = pygame.Rect(xPos, yPos, 32, 32)
     self.radius = range # Range of the tower
     self.cost = cost # Cost of the tower
+    self.damage = damage # Damage of the tower
+    self.splashDamage = splashDamage # If tower has splash damage
     self.image = image # Image of the tower
     self.placed = False # If the tower has been placed
+    self.splashDamage = splashDamage # If the tower has splash damage
     self.level = level # Level object
     self.attackSpeed = attackSpeed # Attack speed of the tower
+    self.active = active # If the tower is active
+    self.name = name # Name of the tower
 
     # Temp for testing. Used for timing of attacks 
     self.timer = 0
@@ -30,11 +35,27 @@ class Tower(pygame.sprite.Sprite):
   def getDamage(self):
     return self.damage
   
+  def getRange(self):
+    return self.radius
+  
+  def getAttackSpeed(self):
+    return self.attackSpeed
+  
   def hasSplashDmg(self):
-    return self.splashDmg
+    return self.splashDamage
+  
+  def getName(self):
+    return self.name
   
   def getCost(self):  
     return self.cost
+  
+  def getImage(self):
+    return self.image
+  
+  def setPosition(self, x, y):
+    self.rect.x = x
+    self.rect.y = y
   
   # Render methods
 
@@ -64,7 +85,7 @@ class Tower(pygame.sprite.Sprite):
   def defend(self):
     currentTime = pygame.time.get_ticks()
 
-    if currentTime - self.lastShot > self.attackSpeed:
+    if currentTime - self.lastShot > self.attackSpeed and self.active == True:
       progress = 0
       target = None
 
@@ -73,8 +94,6 @@ class Tower(pygame.sprite.Sprite):
           if alien.getProgress() > progress:
             progress = alien.getProgress()
             target = alien
-      
-      print(target)
 
       if target != None:
         self.shoot(self.rect.x, self.rect.y, target)
@@ -86,24 +105,24 @@ class Tower(pygame.sprite.Sprite):
   
 
 class Cannon(Tower):
-  def __init__(self, level):
-    super().__init__(5, 5, 300, 50, 250, level, pygame.image.load("assets/towers/cannon.png"))
+  def __init__(self, level, active=True):
+    super().__init__(0, 0, 100, 10, 150, 1000, False, level, "Cannon", pygame.image.load("assets/towers/cannon.png"), active)
     self.level = level
   
   def shoot(self, x, y, target):
     self.level.addProjectile(CannonProj(x, y, target))
     
 class Bomber(Tower):
-  def __init__(self, level):
-    super().__init__(5, 5, 300, 50, 250, level, pygame.image.load("assets/towers/bomber.png"))
+  def __init__(self, level, active=True):
+    super().__init__(0, 0, 100, 10, 150, 1000, False, level, "Bomber", pygame.image.load("assets/towers/bomber.png"), active)
     self.level = level
   
   def shoot(self, x, y, target):
     self.level.addProjectile(BomberProj(x, y, target))
 
 class Catapult(Tower):
-  def __init__(self, level):
-    super().__init__(5, 5, 300, 50, 250, level, pygame.image.load("assets/towers/catapult.png"))
+  def __init__(self, level, active=True):
+    super().__init__(0, 0, 100, 10, 150, 1000, False, level, "Catapult", pygame.image.load("assets/towers/catapult.png"), active)
     self.level = level
   
   def shoot(self, x, y, target):

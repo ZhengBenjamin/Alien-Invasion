@@ -143,3 +143,4 @@ class BigDaddyBen(Alien):
 class SkateboardAlien(Alien):
   def __init__(self, path):
     super().__init__(15, 3, 30, path, pygame.image.load("assets/aliens/skateboard.png"))
+
