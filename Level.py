@@ -11,11 +11,14 @@ class Level:
   
     self.shop = shop
     self.level = shop.getLevel()
+    self.health = 100
 
     # Sprite Groups
     self.aliens = pygame.sprite.Group()
     self.projectiles = pygame.sprite.Group()
     self.towers = towers
+
+    # Game State
     self.lost = False 
     self.complete = False
 
@@ -68,13 +71,24 @@ class Level:
     self.towers.update(window)
     self.projectiles.update(window)
 
-  # Temp for testing. Used to spawn aliens 
+  # Spawning logic for each level 
   def startSpawn(self):
     currentTime = pygame.time.get_ticks()
+    spawned = [0, 0, 0, 0] # Count of aliens spawned [easy, med, hard, boss]
 
-    if currentTime - self.lastSpawn > self.spawnRate:
-      self.aliens.add(Slime(self.maps[0], self))
-      self.lastSpawn = currentTime
+    if self.level < 5: # Spawning logic for first 5 levels 
+      while spawned[0] < 3 + self.level * 2:
+        if currentTime - self.lastSpawn > self.spawnRate:
+          self.aliens.add(Slime(self.maps[0], self))
+          self.lastSpawn = currentTime
+          spawned[0] += 1
+
+    if self.level > 5 and self.level < 10: # Spawning logic for levels 6-10
+      while spawned[1] < 10:
+        if currentTime - self.lastSpawn > self.spawnRate:
+          self.aliens.add(BobaAlien(self.maps[0], self))
+          self.lastSpawn = currentTime
+          spawned[1] += 1
 
 
 

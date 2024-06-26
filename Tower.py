@@ -14,7 +14,6 @@ class Tower(pygame.sprite.Sprite):
     self.radius = range # Range of the tower
     self.cost = cost # Cost of the tower
     self.damage = damage # Damage of the tower
-    self.splashDamage = splashDamage # If tower has splash damage
     self.image = image # Image of the tower
     self.placed = False # If the tower has been placed
     self.splashDamage = splashDamage # If the tower has splash damage
@@ -23,9 +22,7 @@ class Tower(pygame.sprite.Sprite):
     self.active = active # If the tower is active
     self.name = name # Name of the tower
 
-    # Temp for testing. Used for timing of attacks 
-    self.timer = 0
-    self.lastShot = pygame.time.get_ticks()
+    self.lastShot = pygame.time.get_ticks() # Last time the tower shot
 
   # Getter / Setter methods 
   
