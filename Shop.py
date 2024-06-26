@@ -9,6 +9,7 @@ class Shop:
   def __init__(self):
     self.rect = pygame.Rect(1000, 0, 300, 800) # Rectangle containing shop
     self.money = 200 # Starting money
+    self.health = 100 # Starting health
     self.towers = pygame.sprite.Group() # List of towers
     self.selectedTower = None # Selected tower (for placement)
     self.levelObj = None # Level object
@@ -37,10 +38,6 @@ class Shop:
 
   def deductMoney(self, amount):
     self.money -= amount
-
-  def setTowers(self, towers):
-    self.towers = towers
-    print("Set towers: " + str(self.towers))
   
   def getMoney(self):
     return self.money
@@ -53,6 +50,10 @@ class Shop:
   
   def setEvents(self, events):
     self.events = events
+
+  def updateLevel(self, towers, health):
+    self.towers = towers
+    self.health = health
 
   # Render methods
 
@@ -84,8 +85,12 @@ class Shop:
 
     # Draw the money
     font = pygame.font.Font(None, 36)
-    text = font.render("Money: " + str(self.money), 1, (255, 255, 255))
-    window.blit(text, (10, 10))
+    money = font.render("Money: " + str(self.money), 1, (255, 255, 255))
+    level = font.render("Level: " + str(self.level), 1, (255, 255, 255))
+    health = font.render("Health: " + str(self.levelObj.getHealth()), 1, (255, 255, 255))
+    window.blit(money, (10, 10))
+    window.blit(level, (10, 30))
+    window.blit(health, (10, 50))
 
     # Draw the buttons for each of the towers
     for tower in list(self.towerButtons.keys()):
@@ -115,6 +120,7 @@ class Shop:
   def startLevel(self):
     self.levelObj = Level(self)
     self.levelObj.updateTowers(self.towers)
+    self.levelObj.setHealth(self.health)
     print("Starting level " + str(self.level))
   
   def selectTower(self, tower):

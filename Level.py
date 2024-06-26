@@ -26,7 +26,7 @@ class Level:
     # Maps
     # Map layout: [[start], [verticies]]: [[startingDirection], [x, y, nextDirection]]
     self.maps = []
-    self.maps.append([[200, 200, "right"], [400, 200, "down"], [400, 600, "right"], [800, 600, "up"]])
+    self.maps.append([[100, 200, "right"], [400, 200, "down"], [400, 600, "right"], [800, 600, "up"]])
     
     # Timing of spawns
     self.lastSpawnEasy = pygame.time.get_ticks()
@@ -51,11 +51,17 @@ class Level:
   def getAliens(self):
     return self.aliens
   
+  def getHealth(self):
+    return self.health
+
   def isComplete(self):
     return self.complete
   
   def isLost(self):
     return self.lost
+
+  def setHealth(self, health):
+    self.health = health
 
   def addMoney(self, amount):
     self.shop.addMoney(amount)
@@ -68,14 +74,18 @@ class Level:
 
   def updateTowers(self, towers):
     self.towers = towers
-    
     for tower in towers:
       tower.setLevel(self)
 
+  def deductHealth(self, amount):
+    self.health -= amount
+    if self.health <= 0:
+      self.lost = True
+      print("Game Over")
+
   def checkDone(self):
     if len(self.aliens.sprites()) == 0:
-      self.shop.setTowers(self.towers)
-      print("Level Tower Object: " + str(self.towers))
+      self.shop.updateLevel(self.towers, self.health)
       self.complete = True
       print("Level Complete")
 

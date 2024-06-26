@@ -55,11 +55,15 @@ class Alien(pygame.sprite.Sprite):
 
   def update(self, window):
     if self.health > 0:
+      if self.rect.x == 1000 or self.rect.x == 0 or self.rect.y == 800 or self.rect.y == 0:
+        self.kill()
+        self.level.deductHealth(1)
+        self.level.checkDone()
       self.progress += self.speed
       self.updatePath()
       self.move(self.velocity[0], self.velocity[1])
       self.draw(window)
-    else:
+    else: 
       self.level.addMoney(self.reward)
       self.kill()
       self.level.checkDone()
