@@ -8,7 +8,7 @@ class Shop:
   
   def __init__(self):
     self.rect = pygame.Rect(1000, 0, 300, 800) # Rectangle containing shop
-    self.money = 100 # Starting money
+    self.money = 200 # Starting money
     self.towers = pygame.sprite.Group() # List of towers
     self.selectedTower = None # Selected tower (for placement)
     self.levelObj = None # Level object
@@ -30,7 +30,6 @@ class Shop:
 
     return towerButtons
 
-
   # Getter / Setter methods
 
   def addMoney(self, amount):
@@ -41,6 +40,7 @@ class Shop:
 
   def setTowers(self, towers):
     self.towers = towers
+    print("Set towers: " + str(self.towers))
   
   def getMoney(self):
     return self.money
@@ -53,24 +53,29 @@ class Shop:
   
   def setEvents(self, events):
     self.events = events
-  
+
   # Render methods
 
+  # Renders the shop and the level
   def draw(self, window):
-    if self.levelObj == None: # Start the game 
-      self.startLevel()
-    elif self.levelObj.isComplete(): # Logic when player complets the level
-      if self.levelObj.isLost():
-        self.level = 1
-        self.towers = pygame.sprite.Group()
-      else: 
-        self.towers = self.levelObj.getTowers() # Stores the level so they can be rendered in the next level
-        self.level += 1
-        self.startLevel()
-    
+    self.update()
     self.levelObj.draw(window)
     self.shopGUI(window)
   
+  # Updates the shop and the level
+  def update(self):
+    if self.levelObj == None:
+      self.level = 1
+      self.startLevel()
+      print("Game Started")
+    elif self.levelObj.isLost():
+      self.level = 1
+      self.towers = pygame.sprite.Group() # Clears player towers 
+    elif self.levelObj.isComplete():
+      self.level += 1
+      print("Update Method Tower: " + str(self.towers))
+      self.startLevel()
+
   def shopGUI(self, window):
     yPos = 200 # Starting y position for the buttons
 
@@ -108,7 +113,9 @@ class Shop:
   # Main methods
 
   def startLevel(self):
-    self.levelObj = Level(self, self.towers)
+    self.levelObj = Level(self)
+    self.levelObj.updateTowers(self.towers)
+    print("Starting level " + str(self.level))
   
   def selectTower(self, tower):
     self.selectedTower = tower 
@@ -127,13 +134,14 @@ class Shop:
 
   def addTower(self, tower):
     if tower.getName() == "Cannon":
-      self.towers.add(Cannon(self.levelObj))
+      self.levelObj.addTower(Cannon(self.levelObj))
     elif tower.getName() == "Bomber":
-      self.towers.add(Bomber(self.levelObj))
+      self.levelObj.addTower(Bomber(self.levelObj))
     elif tower.getName() == "Catapult":
-      self.towers.add(Catapult(self.levelObj))
+      self.levelObj.addTower(Catapult(self.levelObj))
     else:
       pass
+  
     
 
   

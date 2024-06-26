@@ -53,6 +53,9 @@ class Tower(pygame.sprite.Sprite):
   def setPosition(self, x, y):
     self.rect.x = x
     self.rect.y = y
+
+  def setLevel(self, level):
+    self.level = level
   
   # Render methods
 

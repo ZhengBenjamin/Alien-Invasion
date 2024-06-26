@@ -62,6 +62,7 @@ class Alien(pygame.sprite.Sprite):
     else:
       self.level.addMoney(self.reward)
       self.kill()
+      self.level.checkDone()
 
   # Movement Methods
 
