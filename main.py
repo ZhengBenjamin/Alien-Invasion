@@ -18,7 +18,7 @@ shop = Shop()  # Shop object
 
 # Load the map image
 map_img = pygame.image.load(os.path.join('assets', 'map.png')).convert_alpha()
-map_img = pygame.transform.scale(map_img, (WIDTH, HEIGHT))  # Scale map image to fit the window
+map_img = pygame.transform.scale(map_img, (1000, HEIGHT))  # Scale map image to fit the window
 
 # Draws the window and updates the sprites
 def draw():
