@@ -94,26 +94,41 @@ class Shop:
 
     # Draw the buttons for each of the towers
     for tower in list(self.towerButtons.keys()):
-      self.drawTowerButton(window, tower)
+      self.drawTowerButton(window, tower, yPos)
+      yPos += 150  # Adjust yPos for the next button
     
   # Renders the buttons to buy the towers
-  def drawTowerButton(self, window, tower):
+  def drawTowerButton(self, window, tower, yPos):
     # Draw button
     button = self.towerButtons[tower]
 
-    window.blit(pygame.image.load("assets/shop/towerButton.png"), button.topleft)
+    # Load tower button image and frame it
+    button_image = pygame.image.load("assets/shop/towerButton.png")
+    button_rect = button_image.get_rect()
+    button_rect.topleft = button.topleft
+    window.blit(button_image, button_rect)
+
+    # Adjust tower position within the button
     tower.setPosition(button.x + 10, button.y + 24)
     tower.draw(window)
 
+    # Render tower details text centered left within the button frame
     font = pygame.font.Font(None, 18)
-    name = font.render("{}\nDamage: {}\nRange: {}\nCooldown: {}\nCost: {}".format(
-      tower.getName(), 
-      tower.getDamage(), 
-      tower.getRange(), 
-      tower.getAttackSpeed()/1000, 
-      tower.getCost()
-    ), 1, (255, 255, 255))
-    window.blit(name, (button.x + 50, button.y + 20))
+    name = tower.getName()
+    damage = "Damage: {}".format(tower.getDamage())
+    range_ = "Range: {}".format(tower.getRange())
+    cooldown = "Cooldown: {:.2f}s".format(tower.getAttackSpeed() / 1000)
+    cost = "Cost: {}".format(tower.getCost())
+
+    text_lines = [name, damage, range_, cooldown, cost]
+    text_y = button_rect.centery - font.get_linesize() * len(text_lines) // 2
+
+    for line in text_lines:
+      text_surface = font.render(line, True, (255, 255, 255))
+      text_rect = text_surface.get_rect()
+      text_rect.topleft = (button_rect.centerx + 20, text_y)
+      window.blit(text_surface, text_rect)
+      text_y += font.get_linesize()
     
   # Main methods
 
@@ -147,7 +162,3 @@ class Shop:
       self.levelObj.addTower(Catapult(self.levelObj))
     else:
       pass
-  
-    
-
-  
