@@ -19,6 +19,16 @@ class Shop:
     self.towerCollection = [Cannon(None, False), Bomber(None, False), Catapult(None, False)]
     self.towerButtons = self.makeTowerButtons(self.towerCollection)
 
+    # Define quit button centered within the gray area
+    quit_button_width = 150
+    quit_button_height = 50
+    quit_button_x = self.rect.centerx - quit_button_width // 2
+    quit_button_y = self.rect.bottom - 100  # Adjusted position vertically
+
+    self.quit_button = pygame.Rect(quit_button_x, quit_button_y, quit_button_width, quit_button_height)
+    self.quit_button_color = (255, 0, 0)  # Initial color
+    self.quit_button_hover_color = (255, 100, 100)  # Hover color
+
   # Helper methods for constructor 
 
   # Creates the buttons for each of the towers
@@ -96,6 +106,20 @@ class Shop:
     for tower in list(self.towerButtons.keys()):
       self.drawTowerButton(window, tower, yPos)
       yPos += 150  # Adjust yPos for the next button
+
+    # Check if mouse is over quit button
+    mouse_pos = pygame.mouse.get_pos()
+    if self.quit_button.collidepoint(mouse_pos):
+      self.quit_button_color = self.quit_button_hover_color
+    else:
+      self.quit_button_color = (255, 0, 0)  # Default color
+
+    # Draw quit button
+    pygame.draw.rect(window, self.quit_button_color, self.quit_button)  # Red rectangle for quit button
+    font = pygame.font.Font(None, 36)
+    quit_text = font.render("Quit", True, (255, 255, 255))
+    quit_text_rect = quit_text.get_rect(center=self.quit_button.center)
+    window.blit(quit_text, quit_text_rect)
     
   # Renders the buttons to buy the towers
   def drawTowerButton(self, window, tower, yPos):
@@ -124,12 +148,14 @@ class Shop:
     text_y = button_rect.centery - font.get_linesize() * len(text_lines) // 2
 
     for line in text_lines:
-      text_surface = font.render(line, True, (255, 255, 255))
-      text_rect = text_surface.get_rect()
-      text_rect.topleft = (button_rect.centerx + 20, text_y)
-      window.blit(text_surface, text_rect)
-      text_y += font.get_linesize()
-    
+        text_surface = font.render(line, True, (255, 255, 255))
+        text_rect = text_surface.get_rect()
+        # Adjusted left position to move text closer to the black button
+        text_rect.topleft = (button_rect.centerx + 10, text_y)
+        window.blit(text_surface, text_rect)
+        text_y += font.get_linesize()
+
+
   # Main methods
 
   def startLevel(self):
@@ -144,14 +170,19 @@ class Shop:
   def handleSelection(self, event):
     if event.type == pygame.MOUSEBUTTONUP:
       pos = pygame.mouse.get_pos()
-      for tower in list(self.towerButtons.keys()):
-        if self.towerButtons.get(tower).collidepoint(pos):
-          if self.money >= tower.getCost():
-            self.selectTower(tower)
-            self.deductMoney(tower.getCost())
-            self.addTower(tower)
-          else:
-            print("Not enough money")
+      # Check if quit button is clicked
+      if self.quit_button.collidepoint(pos):
+        pygame.quit()  # Quit Pygame
+        exit()  # Exit Python program
+      else:
+        for tower in list(self.towerButtons.keys()):
+          if self.towerButtons.get(tower).collidepoint(pos):
+            if self.money >= tower.getCost():
+              self.selectTower(tower)
+              self.deductMoney(tower.getCost())
+              self.addTower(tower)
+            else:
+              print("Not enough money")
 
   def addTower(self, tower):
     if tower.getName() == "Cannon":
