@@ -26,7 +26,7 @@ def load_gif(filename):
     try:
         while True:
             frame = gif.copy()
-            frame = frame.resize((WIDTH, HEIGHT), Image.ANTIALIAS)
+            frame = frame.resize((WIDTH, HEIGHT), Image.Resampling.LANCZOS)
             frames.append(pygame.image.fromstring(frame.tobytes(), frame.size, frame.mode))
             gif.seek(len(frames))  # Move to the next frame
     except EOFError:
