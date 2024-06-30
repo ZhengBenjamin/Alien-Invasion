@@ -68,7 +68,6 @@ class Shop:
     if self.levelObj == None:
       self.level = 1
       self.startLevel()
-      print("Game Started")
     elif self.levelObj.isLost():
       self.level = 1
       self.towers = pygame.sprite.Group() # Clears player towers 
