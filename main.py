@@ -117,7 +117,7 @@ def main():
         draw()
     
     pygame.quit()
-    sys.exit()
+    sys.exit() #slay
 
 while True:
     main_menu()
