@@ -14,17 +14,21 @@ class Events:
   def updateEvents(cls):
     cls.events = pygame.event.get()
     cls.currentTime = pygame.time.get_ticks()
-
+    
+    mouseDown = False
+    
     for event in cls.events:
       if event.type == pygame.MOUSEBUTTONDOWN:
-        if cls.currentTime - cls.lastPressed > 1000:
-          cls.mousePressed = True
-          cls.lastPressed = cls.currentTime
-        else:
-          cls.mousePressed = False
+        mouseDown = True
       
       if event.type == pygame.MOUSEBUTTONUP:
-        cls.mousePressed = False
+        mouseDown = False
+    
+    if mouseDown and cls.currentTime - cls.lastPressed > 250:
+      cls.mousePressed = True
+      cls.lastPressed = cls.currentTime
+    else:
+      cls.mousePressed = False
         
   @classmethod
   def getEvents(cls):

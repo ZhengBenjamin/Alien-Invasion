@@ -2,6 +2,7 @@ import pygame
 import os
 from Level import *
 from Tower import *
+from Events import *
 from pathlib import Path
 
 class Shop:
@@ -75,6 +76,7 @@ class Shop:
       self.level += 1
       print("Update Method Tower: " + str(self.towers))
       self.startLevel()
+    self.handleSelection()
 
   def shopGUI(self, window):
     yPos = 200 # Starting y position for the buttons
@@ -125,8 +127,8 @@ class Shop:
   def selectTower(self, tower):
     self.selectedTower = tower 
   
-  def handleSelection(self, event):
-    if event.type == pygame.MOUSEBUTTONUP:
+  def handleSelection(self):
+    if Events.getMousePressed() == True:
       pos = pygame.mouse.get_pos()
       for tower in list(self.towerButtons.keys()):
         if self.towerButtons.get(tower).collidepoint(pos):
@@ -137,6 +139,7 @@ class Shop:
           else:
             print("Not enough money")
 
+  # Adds tower object to level
   def addTower(self, tower):
     if tower.getName() == "Cannon":
       self.levelObj.addTower(Cannon(self.levelObj))

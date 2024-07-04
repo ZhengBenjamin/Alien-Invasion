@@ -1,6 +1,7 @@
 import pygame
 import os
 from Projectile import *
+from Events import *
 from typing import Type
 
 # Superclass for all towers
@@ -21,6 +22,7 @@ class Tower(pygame.sprite.Sprite):
     self.attackSpeed = attackSpeed # Attack speed of the tower
     self.active = active # If the tower is active
     self.name = name # Name of the tower
+    self.clicked = 0 # If the tower has been clicked
 
     self.lastShot = pygame.time.get_ticks() # Last time the tower shot
 
@@ -78,8 +80,10 @@ class Tower(pygame.sprite.Sprite):
     pos = pygame.mouse.get_pos()
     self.rect.center = pos
 
-    if pygame.mouse.get_pressed()[0] == 1:
-      self.placed = True
+    if Events.getMousePressed() == True:
+      self.clicked += 1
+      if self.clicked >= 2:
+        self.placed = True
 
   # Logic for targeting and shooting aliens
   def defend(self):
