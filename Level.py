@@ -104,7 +104,6 @@ class Level:
     self.aliens.update(window)
     self.towers.update(window)
     self.projectiles.update(window)
-    print(self.towers)
 
   # Spawning logic for each level 
   def spawn(self):

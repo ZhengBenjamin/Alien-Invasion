@@ -1,5 +1,6 @@
 # Alien superclass, parent class for al lthe alien types in the game 
 import pygame
+import random
 import os
 
 class Alien(pygame.sprite.Sprite):
@@ -7,12 +8,14 @@ class Alien(pygame.sprite.Sprite):
   def __init__ (self, health, speed, reward, path, level, image): 
     pygame.sprite.Sprite.__init__(self)
 
-    self.rect = pygame.Rect(path[0][0], path[0][1], 32, 32) # Rectangular Hitbox 
+    yVal, xVal = random.randrange(0, 4), random.randrange(0, 4)
+
+    self.rect = pygame.Rect(path[0][0] + xVal * 7, path[0][1] + yVal * 7, 16, 16) # Rectangular Hitbox 
     self.health = health # Health of the alien
     self.speed = speed # Speed of the alien
     self.reward = reward # Reward for killing the alien
     self.path = path # Path the alien will follow
-    self.image = image # Image of the alien
+    self.image = pygame.transform.scale(image, (16,16)) # Image of the alien
     self.level = level # Level object
     self.velocity = [0, 0] # Starting velocity of the alien
     self.turn = 0 # Turn number on path
@@ -55,7 +58,7 @@ class Alien(pygame.sprite.Sprite):
 
   def update(self, window):
     if self.health > 0:
-      if self.rect.x == 1000 or self.rect.x == 0 or self.rect.y == 800 or self.rect.y == 0:
+      if self.rect.x > 1000 or self.rect.x < 0 or self.rect.y > 800 or self.rect.y < 0:
         self.kill()
         self.level.deductHealth(1)
         self.level.checkDone()
@@ -106,11 +109,11 @@ class Alien(pygame.sprite.Sprite):
     # Remaining Paths
     if self.turn < len(self.path):
       if self.currentDirection in ["left", "right"]:
-        if self.rect.x == self.path[self.turn][0]:
+        if abs(self.path[self.turn][0] - self.rect.x) < random.randrange(-32, 32):
           self.calcNextPath()
           self.turn += 1
       elif self.currentDirection in ["up", "down"]:
-        if self.rect.y == self.path[self.turn][1]:
+        if abs(self.path[self.turn][1] - self.rect.y) < random.randrange(-32, 32):
           self.calcNextPath()
           self.turn += 1
 
