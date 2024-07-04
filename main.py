@@ -46,10 +46,7 @@ def main():
   while run:
     clock.tick_busy_loop(FPS)
 
-    events = pygame.event.get()
-  
-    if events != []:
-      Events.updateEvents(events)
+    Events.updateEvents() # Update the events
 
     for event in Events.getEvents():  # If the user closes the window, quit program
       if event.type == pygame.QUIT:

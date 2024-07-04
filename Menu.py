@@ -61,17 +61,13 @@ class StartMenu:
     for button in [self.PLAY_BUTTON, self.QUIT_BUTTON]:
       button.changeColor(self.MENU_MOUSE_POS)
       button.update(window)
-    
-    for event in Events.getEvents():
-      if event.type == pygame.MOUSEBUTTONDOWN:
-        print("Mouse Clicked")
-        if self.PLAY_BUTTON.checkForInput(self.MENU_MOUSE_POS):
-          self.start = True  # Transition to the main game loop
-          print("Play button pressed")
-          return
-        if self.QUIT_BUTTON.checkForInput(self.MENU_MOUSE_POS):
-          pygame.quit()
-          sys.exit()
 
+    if Events.getMousePressed() == True:
+      if self.PLAY_BUTTON.checkForInput(self.MENU_MOUSE_POS):
+        self.start = True  # Transition to the main game loop
+        return
+      if self.QUIT_BUTTON.checkForInput(self.MENU_MOUSE_POS):
+        pygame.quit()
+        sys.exit()
     
   
