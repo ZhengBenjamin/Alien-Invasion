@@ -10,6 +10,8 @@ class Alien(pygame.sprite.Sprite):
     pygame.sprite.Sprite.__init__(self)
 
     self.xOffset, self.yOffset = random.randrange(-24, 24), random.randrange(-24, 24)
+    self.randomOffset = random.randrange(0, 64)
+    self.lastRandom = pygame.time.get_ticks()
 
     self.rect = pygame.Rect(path[0][0] + self.xOffset, path[0][1] + self.yOffset, 16, 16) # Rectangular Hitbox 
     self.health = health # Health of the alien
@@ -109,39 +111,24 @@ class Alien(pygame.sprite.Sprite):
 
     # Remaining Paths
     if self.turn < len(self.path):
-      num = random.choice(range(-32, 33))
-      match self.currentDirection:
-        case "left":
-          if (self.rect.centerx - self.path[self.turn][0]) < random.randrange(-32, 32):
-            self.calcNextPath()
-            self.turn += 1
-        case "right":
-          if (self.path[self.turn][0] - self.rect.centerx) < random.randrange(-32, 32):
-            self.calcNextPath()
-            self.turn += 1
-        case "up":
-          if (self.rect.centery - self.path[self.turn][1]) < random.randrange(-32, 32):
-            self.calcNextPath()
-            self.turn += 1
-        case "down":
-          if (self.path[self.turn][1] - self.rect.centery) < num:
-            self.calcNextPath()
-            self.turn += 1
-        case _:
-          pass
-
-      # if self.currentDirection in ["left", "right"]:
-      #   distance = math.sqrt((self.path[self.turn][0] - self.rect.centerx) ** 2)
-      #   if distance < self.xOffset or distance > self.lastDistance[0]:
-      #     self.calcNextPath()
-      #     self.turn += 1
-      #   self.lastDistance[0] = distance
-      # elif self.currentDirection in ["up", "down"]:
-      #   distance = math.sqrt((self.path[self.turn][1] - self.rect.centery) ** 2)
-      #   if distance < self.yOffset or distance > self.lastDistance[1]:
-      #     self.calcNextPath()
-      #     self.turn += 1
-      #   self.lastDistance[1] = distance
+      alienOffset = 32
+      if self.currentDirection == "left":
+        if (self.rect.centerx - self.path[self.turn][0]) < self.randomOffset:
+          self.calcNextPath()
+          self.turn += 1
+      if self.currentDirection == "right":
+        if (self.path[self.turn][0] - self.rect.centerx) < self.randomOffset:
+          self.calcNextPath()
+          self.turn += 1
+      if self.currentDirection == "up":
+        if (self.rect.centery - self.path[self.turn][1]) < self.randomOffset:
+          self.calcNextPath()
+          self.turn += 1
+      if self.currentDirection == "down":
+        self.generateRandom()
+        if (self.path[self.turn][1] - self.rect.centery) < self.randomOffset:
+          self.calcNextPath()
+          self.turn += 1
 
   def calcNextPath(self):
     self.lastDistance = [9999,9999]
@@ -161,6 +148,14 @@ class Alien(pygame.sprite.Sprite):
         self.moveDown()
         self.currentDirection = "down"
     return
+  
+  def generateRandom(self):
+    currentTime = pygame.time.get_ticks()
+    
+    if currentTime - self.lastRandom > 150:
+      self.randomOffset = random.randrange(-24, 24)
+      self.lastRandom = currentTime
+      print("Random offset: " + str(self.randomOffset))
 
 
 # Alien subclasses
