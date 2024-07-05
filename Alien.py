@@ -1,6 +1,7 @@
 # Alien superclass, parent class for al lthe alien types in the game 
 import pygame
 import random
+import math
 import os
 
 class Alien(pygame.sprite.Sprite):
@@ -8,9 +9,9 @@ class Alien(pygame.sprite.Sprite):
   def __init__ (self, health, speed, reward, path, level, image): 
     pygame.sprite.Sprite.__init__(self)
 
-    yVal, xVal = random.randrange(0, 4), random.randrange(0, 4)
+    self.xOffset, self.yOffset = random.randrange(-24, 24), random.randrange(-24, 24)
 
-    self.rect = pygame.Rect(path[0][0] + xVal * 7, path[0][1] + yVal * 7, 16, 16) # Rectangular Hitbox 
+    self.rect = pygame.Rect(path[0][0] + self.xOffset, path[0][1] + self.yOffset, 16, 16) # Rectangular Hitbox 
     self.health = health # Health of the alien
     self.speed = speed # Speed of the alien
     self.reward = reward # Reward for killing the alien
@@ -21,6 +22,7 @@ class Alien(pygame.sprite.Sprite):
     self.turn = 0 # Turn number on path
     self.currentDirection = path[0][2] # Current direction of the alien
     self.progress = 0 # Progress on the path
+    self.lastDistance = [9999, 9999] # Last distance from the next point on the path (Starting with arbitrarily large number)
 
   # Getter / Setter methods
 
@@ -58,7 +60,7 @@ class Alien(pygame.sprite.Sprite):
 
   def update(self, window):
     if self.health > 0:
-      if self.rect.x > 1000 or self.rect.x < 0 or self.rect.y > 800 or self.rect.y < 0:
+      if self.rect.x > 980 or self.rect.x < -20 or self.rect.y > 980 or self.rect.y < -20:
         self.kill()
         self.level.deductHealth(1)
         self.level.checkDone()
@@ -90,7 +92,6 @@ class Alien(pygame.sprite.Sprite):
     self.velocity[1] = self.speed
 
   def updatePath(self):
-
     # Starting Direction
     if self.turn == 0:
       match self.path[0][2]:
@@ -108,16 +109,42 @@ class Alien(pygame.sprite.Sprite):
 
     # Remaining Paths
     if self.turn < len(self.path):
-      if self.currentDirection in ["left", "right"]:
-        if abs(self.path[self.turn][0] - self.rect.x) < random.randrange(-32, 32):
-          self.calcNextPath()
-          self.turn += 1
-      elif self.currentDirection in ["up", "down"]:
-        if abs(self.path[self.turn][1] - self.rect.y) < random.randrange(-32, 32):
-          self.calcNextPath()
-          self.turn += 1
+      num = random.choice(range(-32, 33))
+      match self.currentDirection:
+        case "left":
+          if (self.rect.centerx - self.path[self.turn][0]) < random.randrange(-32, 32):
+            self.calcNextPath()
+            self.turn += 1
+        case "right":
+          if (self.path[self.turn][0] - self.rect.centerx) < random.randrange(-32, 32):
+            self.calcNextPath()
+            self.turn += 1
+        case "up":
+          if (self.rect.centery - self.path[self.turn][1]) < random.randrange(-32, 32):
+            self.calcNextPath()
+            self.turn += 1
+        case "down":
+          if (self.path[self.turn][1] - self.rect.centery) < num:
+            self.calcNextPath()
+            self.turn += 1
+        case _:
+          pass
+
+      # if self.currentDirection in ["left", "right"]:
+      #   distance = math.sqrt((self.path[self.turn][0] - self.rect.centerx) ** 2)
+      #   if distance < self.xOffset or distance > self.lastDistance[0]:
+      #     self.calcNextPath()
+      #     self.turn += 1
+      #   self.lastDistance[0] = distance
+      # elif self.currentDirection in ["up", "down"]:
+      #   distance = math.sqrt((self.path[self.turn][1] - self.rect.centery) ** 2)
+      #   if distance < self.yOffset or distance > self.lastDistance[1]:
+      #     self.calcNextPath()
+      #     self.turn += 1
+      #   self.lastDistance[1] = distance
 
   def calcNextPath(self):
+    self.lastDistance = [9999,9999]
     self.velocity = [0,0]
     nextDirection = self.path[self.turn][2]
     match nextDirection:
@@ -140,7 +167,7 @@ class Alien(pygame.sprite.Sprite):
 
 class Slime(Alien):
   def __init__(self, path, level):
-    super().__init__(15, 2, 10, path, level, pygame.image.load("assets/aliens/slime.png"))
+    super().__init__(15, 1, 10, path, level, pygame.image.load("assets/aliens/slime.png"))
 
 class BobaAlien(Alien):
   def __init__(self, path, level):

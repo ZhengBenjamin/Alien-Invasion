@@ -8,7 +8,7 @@ from pathlib import Path
 class Shop:
   
   def __init__(self):
-    self.rect = pygame.Rect(1000, 0, 300, 800) # Rectangle containing shop
+    self.rect = pygame.Rect(960, 0, 300, 960) # Rectangle containing shop
     self.money = 200 # Starting money
     self.health = 100 # Starting health
     self.towers = pygame.sprite.Group() # List of towers
@@ -73,8 +73,8 @@ class Shop:
       self.level = 1
       self.towers = pygame.sprite.Group() # Clears player towers 
     elif self.levelObj.isComplete():
+      print("Level Complete")
       self.level += 1
-      print("Update Method Tower: " + str(self.towers))
       self.startLevel()
     self.handleSelection()
 

@@ -15,7 +15,7 @@ pygame.init()
 pygame.display.set_caption("Tower Defense")  # Title of window
 
 # Global variables
-WIDTH, HEIGHT = 1300, 800  # Window Size
+WIDTH, HEIGHT = 1260, 960  # Window Size
 FPS = 120  # Frames per second
 window = pygame.display.set_mode((WIDTH, HEIGHT))  # Window
 currentLevel = 1  # Current level
@@ -23,7 +23,6 @@ stateManager = StateManager(WIDTH, HEIGHT, window)  # State Manager object
 
 # Load the map image
 map_img = pygame.image.load(os.path.join('assets', 'map.png')).convert_alpha()
-map_img = pygame.transform.scale(map_img, (1000, HEIGHT))  # Scale map image to fit the window
 
 # Draws the window and updates the sprites
 def draw():
