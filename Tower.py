@@ -8,7 +8,7 @@ from typing import Type
 class Tower(pygame.sprite.Sprite):
   
   # Constructor
-  def __init__(self, xPos: int, yPos: int, cost: int, damage: int, range: int, attackSpeed: int, splashDamage: bool, level, name: str, image: str, active: bool):
+  def __init__(self, xPos: int, yPos: int, cost: int, damage: int, range: int, attackSpeed: int, splashDamage: bool, levelObj, mapBoxes: list, name: str, image: str, active: bool):
     pygame.sprite.Sprite.__init__(self)
 
     self.rect = pygame.Rect(xPos, yPos, 32, 32)
@@ -18,11 +18,14 @@ class Tower(pygame.sprite.Sprite):
     self.image = image # Image of the tower
     self.placed = False # If the tower has been placed
     self.splashDamage = splashDamage # If the tower has splash damage
-    self.level = level # Level object
+    self.levelObj = levelObj # levelObj object
+    self.mapBoxes = mapBoxes # Map boxes the tower can be placed on
     self.attackSpeed = attackSpeed # Attack speed of the tower
     self.active = active # If the tower is active
     self.name = name # Name of the tower
     self.clicked = 0 # If the tower has been clicked
+    if levelObj != None:
+      self.level = levelObj.getLevel() # Level of the tower
 
     self.lastShot = pygame.time.get_ticks() # Last time the tower shot
 
@@ -56,8 +59,8 @@ class Tower(pygame.sprite.Sprite):
     self.rect.x = x
     self.rect.y = y
 
-  def setLevel(self, level):
-    self.level = level
+  def setlevelObj(self, levelObj):
+    self.levelObj = levelObj
   
   # Render methods
 
@@ -78,12 +81,20 @@ class Tower(pygame.sprite.Sprite):
   # Logic for the placement of tower
   def updatePlacement(self):
     pos = pygame.mouse.get_pos()
-    self.rect.center = pos
+    if self.checkPlacement(pos) == True:
+      self.rect.topleft = ((pos[0] // 64) * 64 + 16, (pos[1] // 64) * 64 + 16)
 
     if Events.getMousePressed() == True:
       self.clicked += 1
-      if self.clicked >= 2:
+      if self.clicked >= 2 and self.checkPlacement(pos) == True:
         self.placed = True
+      pass
+
+  def checkPlacement(self, pos):
+    box = (pos[0] // 64 + 1, pos[1] // 64 + 1)
+    if not (box in self.mapBoxes):
+      return True
+    return False
 
   # Logic for targeting and shooting aliens
   def defend(self):
@@ -93,7 +104,7 @@ class Tower(pygame.sprite.Sprite):
       progress = 0
       target = None
 
-      for alien in self.level.getAliens():
+      for alien in self.levelObj.getAliens():
         if pygame.sprite.collide_circle(self, alien):
           if alien.getProgress() > progress:
             progress = alien.getProgress()
@@ -109,25 +120,25 @@ class Tower(pygame.sprite.Sprite):
   
 
 class Cannon(Tower):
-  def __init__(self, level, active=True):
-    super().__init__(0, 0, 100, 10, 150, 500, False, level, "Cannon", pygame.image.load("assets/towers/cannon.png"), active)
-    self.level = level
+  def __init__(self, levelObj, mapBoxes=None, active=True):
+    super().__init__(0, 0, 100, 10, 150, 500, False, levelObj, mapBoxes, "Cannon", pygame.image.load("assets/towers/cannon.png"), active)
+    self.levelObj = levelObj
   
   def shoot(self, x, y, target):
-    self.level.addProjectile(CannonProj(x, y, target))
+    self.levelObj.addProjectile(CannonProj(x, y, target))
     
 class Bomber(Tower):
-  def __init__(self, level, active=True):
-    super().__init__(0, 0, 100, 10, 150, 1000, False, level, "Bomber", pygame.image.load("assets/towers/bomber.png"), active)
-    self.level = level
+  def __init__(self, levelObj, mapBoxes=None, active=True):
+    super().__init__(0, 0, 100, 10, 150, 1000, False, levelObj, mapBoxes, "Bomber", pygame.image.load("assets/towers/bomber.png"), active)
+    self.levelObj = levelObj
   
   def shoot(self, x, y, target):
-    self.level.addProjectile(BomberProj(x, y, target))
+    self.levelObj.addProjectile(BomberProj(x, y, target))
 
 class Catapult(Tower):
-  def __init__(self, level, active=True):
-    super().__init__(0, 0, 100, 10, 150, 1000, False, level, "Catapult", pygame.image.load("assets/towers/catapult.png"), active)
-    self.level = level
+  def __init__(self, levelObj, mapBoxes=None, active=True):
+    super().__init__(0, 0, 100, 10, 150, 1000, False, levelObj, mapBoxes, "Catapult", pygame.image.load("assets/towers/catapult.png"), active)
+    self.levelObj = levelObj
   
   def shoot(self, x, y, target):
-    self.level.addProjectile(CatapultProj(x, y, target))
+    self.levelObj.addProjectile(CatapultProj(x, y, target))
