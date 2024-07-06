@@ -86,7 +86,7 @@ class Level:
   def updateTowers(self, towers):
     self.towers = towers
     for tower in towers:
-      tower.setLevel(self)
+      tower.setLevelObj(self)
 
   def deductHealth(self, amount):
     self.health -= amount

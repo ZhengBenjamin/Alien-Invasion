@@ -59,7 +59,7 @@ class Tower(pygame.sprite.Sprite):
     self.rect.x = x
     self.rect.y = y
 
-  def setlevelObj(self, levelObj):
+  def setLevelObj(self, levelObj):
     self.levelObj = levelObj
   
   # Render methods
@@ -92,7 +92,7 @@ class Tower(pygame.sprite.Sprite):
 
   def checkPlacement(self, pos):
     box = (pos[0] // 64 + 1, pos[1] // 64 + 1)
-    if not (box in self.mapBoxes):
+    if not (box in self.mapBoxes) and pos[0] < 960:
       return True
     return False
 
