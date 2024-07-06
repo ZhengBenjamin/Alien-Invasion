@@ -16,7 +16,7 @@ pygame.display.set_caption("Tower Defense")  # Title of window
 
 # Global variables
 WIDTH, HEIGHT = 1260, 960  # Window Size
-FPS = 120  # Frames per second
+FPS = 60  # Frames per second
 window = pygame.display.set_mode((WIDTH, HEIGHT))  # Window
 currentLevel = 1  # Current level
 stateManager = StateManager(WIDTH, HEIGHT, window)  # State Manager object
