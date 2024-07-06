@@ -9,9 +9,9 @@ class Alien(pygame.sprite.Sprite):
   def __init__ (self, health, speed, reward, path, level, image): 
     pygame.sprite.Sprite.__init__(self)
 
-    self.xOffset, self.yOffset = random.randrange(-24, 24), random.randrange(-24, 24)
-    self.randomOffset = random.randrange(0, 64)
-    self.lastRandom = pygame.time.get_ticks()
+    self.xOffset, self.yOffset = random.randrange(-8, 8), random.randrange(-8, 8) # Random offset
+    self.randomOffset = 0 # Random offset for turns 
+    self.lastRandom = pygame.time.get_ticks() # Last time the random offset was generated
 
     self.rect = pygame.Rect(path[0][0] + self.xOffset, path[0][1] + self.yOffset, 16, 16) # Rectangular Hitbox 
     self.health = health # Health of the alien
@@ -111,7 +111,6 @@ class Alien(pygame.sprite.Sprite):
 
     # Remaining Paths
     if self.turn < len(self.path):
-      alienOffset = 32
       if self.currentDirection == "left":
         if (self.rect.centerx - self.path[self.turn][0]) < self.randomOffset:
           self.calcNextPath()
@@ -130,6 +129,7 @@ class Alien(pygame.sprite.Sprite):
           self.calcNextPath()
           self.turn += 1
 
+  # Helper method to calculate the next path
   def calcNextPath(self):
     self.lastDistance = [9999,9999]
     self.velocity = [0,0]
@@ -149,13 +149,13 @@ class Alien(pygame.sprite.Sprite):
         self.currentDirection = "down"
     return
   
+  # Helper method generates the random offsets for turns 
   def generateRandom(self):
     currentTime = pygame.time.get_ticks()
     
-    if currentTime - self.lastRandom > 150:
-      self.randomOffset = random.randrange(-24, 24)
+    if currentTime - self.lastRandom > random.randrange(500, 1500):
+      self.randomOffset = random.randrange(-22, 22)
       self.lastRandom = currentTime
-      print("Random offset: " + str(self.randomOffset))
 
 
 # Alien subclasses

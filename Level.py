@@ -26,13 +26,13 @@ class Level:
     # Maps
     # Map layout: [[start], [verticies]]: [[startingDirection], [x, y, nextDirection]]
     self.maps = []
-    self.maps.append([[823, 0, "down"], [831, 99, "left"], [95, 99, "down"], [100, 223, "right"], [835, 223, "down"], [835, 768, "left"], [545, 768, "up"], [545, 383, "left"], [96, 383, "down"], [96, 735, "right"], [288, 735, "down"], [288, 895, "right"]])
+    self.maps.append([[864, 0, "down"], [864, 96, "left"], [96, 96, "down"], [96, 223, "right"], [864, 223, "down"], [864, 736, "left"], [544, 736, "up"], [544, 414, "left"], [96, 414, "down"], [96, 735, "right"], [288, 735, "down"], [288, 864, "right"]])
     self.maps.append([[100, 200, "right"], [400, 200, "down"], [400, 600, "right"], [800, 600, "up"]])
     
     # Timing of spawns
     self.lastSpawnEasy = pygame.time.get_ticks()
     self.lastSpawnMed = pygame.time.get_ticks()
-    self.spawnRateEasy = 250
+    self.spawnRateEasy = 300
     self.spawnRateMed = 500
 
   # Getter / Setter methods
@@ -110,7 +110,7 @@ class Level:
   def spawn(self):
     currentTime = pygame.time.get_ticks()
 
-    if self.level <= 10 and self.spawned[0] < 50 + self.level * 3: # Spawning logic for first 5 levels
+    if self.level <= 10 and self.spawned[0] < 5 + self.level * 5: # Spawning logic for first 5 levels
       if currentTime - self.lastSpawnEasy > self.spawnRateEasy:
         self.aliens.add(Slime(self.maps[0], self))
         self.lastSpawnEasy = currentTime
