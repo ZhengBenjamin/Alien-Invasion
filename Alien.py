@@ -1,30 +1,36 @@
 # Alien superclass, parent class for al lthe alien types in the game 
 import pygame
 import random
-import math
 import os
+from Sprites import *
 
 class Alien(pygame.sprite.Sprite):
   
-  def __init__ (self, health, speed, reward, path, level, image): 
+  def __init__ (self, health, speed, reward, path, level, name): 
     pygame.sprite.Sprite.__init__(self)
+    
+    self.sprites = Sprites.loadSpriteSheets("aliens", name, 16, 16, False) # Load the spritesheet
+    self.sprites["slimeRunLeft"] = [Sprites.flip(sprite) for sprite in self.sprites["slimeRunRight"]] # Flip the sprites for the left direction
+    self.sprite = None # Current sprite
 
     self.xOffset, self.yOffset = random.randrange(-8, 8), random.randrange(-8, 8) # Random offset
     self.randomOffset = 0 # Random offset for turns 
     self.lastRandom = pygame.time.get_ticks() # Last time the random offset was generated
 
+    self.name = name # Name type of alien
     self.rect = pygame.Rect(path[0][0] + self.xOffset, path[0][1] + self.yOffset, 16, 16) # Rectangular Hitbox 
     self.health = health # Health of the alien
     self.speed = speed # Speed of the alien
     self.reward = reward # Reward for killing the alien
     self.path = path # Path the alien will follow
-    self.image = pygame.transform.scale(image, (16,16)) # Image of the alien
     self.level = level # Level object
     self.velocity = [0, 0] # Starting velocity of the alien
     self.turn = 0 # Turn number on path
     self.currentDirection = path[0][2] # Current direction of the alien
     self.progress = 0 # Progress on the path
     self.lastDistance = [9999, 9999] # Last distance from the next point on the path (Starting with arbitrarily large number)
+    self.animationCount = 0 # Count for animation delay
+    self.animationDelay = 5 # Delay between animations
 
   # Getter / Setter methods
 
@@ -58,7 +64,7 @@ class Alien(pygame.sprite.Sprite):
   # Render Methods
 
   def draw(self, window):
-    window.blit(self.image, self.rect.topleft)
+    window.blit(self.sprite, (self.rect.x, self.rect.y))
 
   def update(self, window):
     if self.health > 0:
@@ -69,11 +75,18 @@ class Alien(pygame.sprite.Sprite):
       self.progress += self.speed
       self.updatePath()
       self.move(self.velocity[0], self.velocity[1])
+      self.updateSprite()
       self.draw(window)
     else: 
       self.level.addMoney(self.reward)
       self.kill()
       self.level.checkDone()
+      
+  def updateSprite(self):
+    spriteSheet = "slimeRun" + self.currentDirection.capitalize()
+    animationIndex = self.animationCount // self.animationDelay % len(self.sprites[spriteSheet])
+    self.sprite = self.sprites[spriteSheet][animationIndex]
+    self.animationCount += 1
 
   # Movement Methods
 
@@ -162,17 +175,17 @@ class Alien(pygame.sprite.Sprite):
 
 class Slime(Alien):
   def __init__(self, path, level):
-    super().__init__(15, 1, 10, path, level, pygame.image.load("assets/aliens/slime.png"))
+    super().__init__(15, 1, 10, path, level, "slime")
 
 class BobaAlien(Alien):
   def __init__(self, path, level):
-    super().__init__(10, 1, 20, path, level, pygame.image.load("assets/aliens/boba.png"))
+    super().__init__(10, 1, 20, path, level, "boba")
 
 class BigDaddyBen(Alien):
   def __init__(self, path, level):
-    super().__init__(20, 1, 40, path, level, pygame.image.load("assets/aliens/bigDaddyBen.png"))
+    super().__init__(20, 1, 40, path, level, "bigDaddyBen")
 
 class SkateboardAlien(Alien):
   def __init__(self, path):
-    super().__init__(15, 3, 30, path, pygame.image.load("assets/aliens/skateboard.png"))
+    super().__init__(15, 3, 30, path, "skateboardAlien")
 
