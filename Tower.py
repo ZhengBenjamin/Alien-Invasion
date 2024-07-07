@@ -65,6 +65,10 @@ class Tower(pygame.sprite.Sprite):
   # Render methods
 
   def draw(self, window):
+    if self.placed == False and self.active == True:
+      pygame.draw.circle(window, (255, 0, 0), self.rect.center, self.radius, 1)
+      tempRect = self.image.get_rect(center=pygame.mouse.get_pos())
+      window.blit(self.image, tempRect.topleft)
     window.blit(self.image, self.rect.topleft)
 
   def update(self, window):
