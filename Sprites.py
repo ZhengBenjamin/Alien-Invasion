@@ -22,9 +22,13 @@ class Sprites:
         
       if directional:
         allSprites[image.replace(".png", "") + "Right"] = sprites # Add the sprites to the dictionary
-        allSprites[image.replace(".png", "") + "Left"] = [pygame.transform.flip(sprite, True, False) for sprite in sprites]
+        allSprites[image.replace(".png", "") + "Left"] = [Sprites.flip(sprite) for sprite in sprites]
       else:
         allSprites[image.replace(".png", "")] = sprites
         
     return allSprites
+  
+  @staticmethod
+  def flip(sprite):
+    return pygame.transform.flip(sprite, True, False)
     
