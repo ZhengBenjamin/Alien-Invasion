@@ -10,7 +10,7 @@ class Alien(pygame.sprite.Sprite):
     pygame.sprite.Sprite.__init__(self)
     
     self.sprites = Sprites.loadSpriteSheets("aliens", name, 16, 16, False) # Load the spritesheet
-    self.sprites["slimeRunLeft"] = [Sprites.flip(sprite) for sprite in self.sprites["slimeRunRight"]] # Flip the sprites for the left direction
+    self.sprites["{}RunLeft".format(name)] = [Sprites.flip(sprite) for sprite in self.sprites["{}RunRight".format(name)]] # Flip the sprites for the left direction
     self.sprite = None # Current sprite
 
     self.xOffset, self.yOffset = random.randrange(-8, 8), random.randrange(-8, 8) # Random offset
@@ -30,7 +30,7 @@ class Alien(pygame.sprite.Sprite):
     self.progress = 0 # Progress on the path
     self.lastDistance = [9999, 9999] # Last distance from the next point on the path (Starting with arbitrarily large number)
     self.animationCount = 0 # Count for animation delay
-    self.animationDelay = 5 # Delay between animations
+    self.animationDelay = 3 # Delay between animations
 
   # Getter / Setter methods
 
@@ -83,7 +83,7 @@ class Alien(pygame.sprite.Sprite):
       self.level.checkDone()
       
   def updateSprite(self):
-    spriteSheet = "slimeRun" + self.currentDirection.capitalize()
+    spriteSheet = self.name + "Run" + self.currentDirection.capitalize()
     animationIndex = self.animationCount // self.animationDelay % len(self.sprites[spriteSheet])
     self.sprite = self.sprites[spriteSheet][animationIndex]
     self.animationCount += 1
