@@ -83,7 +83,7 @@ class Projectile(pygame.sprite.Sprite):
 
 class CannonProj(Projectile):
   def __init__(self, x, y, target):
-    super().__init__(x, y, 3, 10, target, pygame.image.load("assets/projectiles/cannonProj.png"))
+    super().__init__(x, y, 8, 10, target, pygame.image.load("assets/projectiles/cannonProj.png"))
   
 class BomberProj(Projectile):
   def __init__(self, x, y, target):
@@ -91,4 +91,4 @@ class BomberProj(Projectile):
 
 class CatapultProj(Projectile):
   def __init__(self, x, y, target):
-    super().__init__(x, y, 8, 5, target, pygame.image.load("assets/projectiles/catapultProj.png"))
+    super().__init__(x, y, 8, 25, target, pygame.image.load("assets/projectiles/catapultProj.png"))

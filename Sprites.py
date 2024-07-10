@@ -19,7 +19,7 @@ class Sprites:
         surface = pygame.Surface((width, height), pygame.SRCALPHA, 32) # Create a surface for the sprite
         rect = pygame.Rect(i * width, 0, width, height) # Create an invidiual rectangle for each sprite in spritesheet
         surface.blit(spriteSheet, (0, 0), rect) # Blit the sprite to the surface
-        sprites.append(pygame.transform.scale_by(surface, 3.5))
+        sprites.append(pygame.transform.scale2x(surface))
         # pygame.transform.scale2x(surface)
         
       if directional:

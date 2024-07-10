@@ -18,7 +18,7 @@ class Alien(pygame.sprite.Sprite):
     self.lastRandom = pygame.time.get_ticks() # Last time the random offset was generated
 
     self.name = name # Name type of alien
-    self.rect = pygame.Rect(path[0][0] + self.xOffset, path[0][1] + self.yOffset, 16, 16) # Rectangular Hitbox 
+    self.rect = pygame.Rect(path[0][0] + self.xOffset, path[0][1] + self.yOffset, 32, 32) # Rectangular Hitbox 
     self.health = health # Health of the alien
     self.speed = speed # Speed of the alien
     self.reward = reward # Reward for killing the alien

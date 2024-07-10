@@ -11,6 +11,7 @@ class Level:
   
     self.shop = shop
     self.level = shop.getLevel()
+    self.map = shop.getMap()
     self.health = 100
 
     # Sprite Groups / Count
@@ -48,10 +49,10 @@ class Level:
     return len(self.towers.sprites())
   
   def getMap(self):
-    return self.maps[self.level - 1]
+    return self.maps[self.map]
   
   def getMapBoxes(self):
-    return self.mapBoxes[self.level - 1]
+    return self.mapBoxes[self.map]
   
   def getTowers(self):
     return self.towers
@@ -120,17 +121,17 @@ class Level:
   def spawn(self):
     currentTime = pygame.time.get_ticks()
 
-    if self.level <= 10 and self.spawned[0] < 500 + self.level * 5: # Spawning logic for first 5 levels
+    if self.level <= 10 and self.spawned[0] < 1 + self.level * 5: # Spawning logic for first 5 levels
       if currentTime - self.lastSpawnEasy > self.spawnRateEasy:
         self.aliens.add(Slime(self.maps[0], self))
         self.lastSpawnEasy = currentTime
         self.spawned[0] += 1
 
-    # if self.level >= 5 and self.level <= 10 and self.spawned[1] < 10: # Spawning logic for levels 6-10
-    #   if currentTime - self.lastSpawnMed > self.spawnRateMed:
-    #     self.aliens.add(BobaAlien(self.maps[0], self))
-    #     self.lastSpawnMed = currentTime
-    #     self.spawned[1] += 1
+    if self.level >= 2 and self.level <= 10 and self.spawned[1] < 10: # Spawning logic for levels 6-10
+      if currentTime - self.lastSpawnMed > self.spawnRateMed:
+        self.aliens.add(BobaAlien(self.maps[0], self))
+        self.lastSpawnMed = currentTime
+        self.spawned[1] += 1
     
 
 

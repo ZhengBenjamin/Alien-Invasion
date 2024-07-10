@@ -18,7 +18,7 @@ class Shop:
     self.events = None # Events
     self.map = 0 # Current map
 
-    self.towerCollection = [Cannon(None, None, False), Bomber(None, None, False), Catapult(None, None, False)]
+    self.towerCollection = [Cannon(None, None, False), Catapult(None, None, False)]
     self.towerButtons = self.makeTowerButtons(self.towerCollection)
 
   # Helper methods for constructor 
@@ -49,6 +49,9 @@ class Shop:
   
   def getLevel(self):
     return self.level
+  
+  def getMap(self):
+    return self.map
   
   def setEvents(self, events):
     self.events = events
@@ -142,11 +145,11 @@ class Shop:
 
   # Adds tower object to level
   def addTower(self, tower):
-    if tower.getName() == "Cannon":
+    if tower.getName() == "cannon":
       self.levelObj.addTower(Cannon(self.levelObj, self.levelObj.getMapBoxes()))
-    elif tower.getName() == "Bomber":
+    elif tower.getName() == "bomber":
       self.levelObj.addTower(Bomber(self.levelObj, self.levelObj.getMapBoxes()))
-    elif tower.getName() == "Catapult":
+    elif tower.getName() == "catapult":
       self.levelObj.addTower(Catapult(self.levelObj, self.levelObj.getMapBoxes()))
     else:
       pass

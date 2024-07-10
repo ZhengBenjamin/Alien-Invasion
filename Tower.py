@@ -1,8 +1,10 @@
 import pygame
+import math
 import os
 from Projectile import *
 from Events import *
-from typing import Type
+from Sprites import *
+
 
 # Superclass for all towers
 class Tower(pygame.sprite.Sprite):
@@ -10,12 +12,15 @@ class Tower(pygame.sprite.Sprite):
   # Constructor
   def __init__(self, xPos: int, yPos: int, cost: int, damage: int, range: int, attackSpeed: int, splashDamage: bool, levelObj, mapBoxes: list, name: str, image: str, active: bool):
     pygame.sprite.Sprite.__init__(self)
+    
+    self.sprites = Sprites.loadSpriteSheets("towers", name, 16, 16, False) # Loads all sprites
+    self.sprite = pygame.transform.scale2x(image)
 
     self.rect = pygame.Rect(xPos, yPos, 32, 32)
     self.radius = range # Range of the tower
     self.cost = cost # Cost of the tower
     self.damage = damage # Damage of the tower
-    self.image = image # Image of the tower
+    self.image = pygame.transform.scale2x(image) # Image of the tower
     self.placed = False # If the tower has been placed
     self.splashDamage = splashDamage # If the tower has splash damage
     self.levelObj = levelObj # levelObj object
@@ -24,6 +29,12 @@ class Tower(pygame.sprite.Sprite):
     self.active = active # If the tower is active
     self.name = name # Name of the tower
     self.clicked = 0 # If the tower has been clicked
+    self.target = None # Alien target 
+    self.fired = False # If tower fired. Used for fire animation 
+    
+    self.animationCount = 0 # Count for animation delay
+    self.animationDelay = 3 # Delay between animations 
+    
     if levelObj != None:
       self.level = levelObj.getLevel() # Level of the tower
 
@@ -68,18 +79,39 @@ class Tower(pygame.sprite.Sprite):
     if self.placed == False and self.active == True:
       pygame.draw.circle(window, (255, 0, 0), self.rect.center, self.radius, 1)
       tempRect = self.image.get_rect(center=pygame.mouse.get_pos())
-      window.blit(self.image, tempRect.topleft)
-    window.blit(self.image, self.rect.topleft)
+      window.blit(self.sprites[self.name + "Idle"][0], tempRect.topleft)
+    window.blit(self.sprite, self.rect.topleft)
 
   def update(self, window):
     
     if self.placed == False:
       self.updatePlacement()
     else: 
+      self.updateSprite()
       self.defend()
     
-    self.draw(window)
+    self.draw(window) 
+        
+  def updateSpriteAngle(self, sprite):
+    if self.target != None:
+      angle = math.atan2((self.rect.x - self.target.getPos()[0]), (self.rect.y - self.target.getPos()[1]))
+      return pygame.transform.rotate(sprite, angle * 180/math.pi)
+    else:
+      return self.sprite
 
+  def updateSprite(self):
+    if self.fired == True:
+      if self.animationCount < self.animationDelay * len(self.sprites[self.name + "Fire"]):
+        animationIndex = self.animationCount // self.animationDelay % len(self.name + "Fire")
+        self.sprite = self.updateSpriteAngle(self.sprites[self.name + "Fire"][animationIndex])
+        self.animationCount += 1 
+      else:
+        self.fired = False
+        self.animationCount = 0
+        self.sprite = self.updateSpriteAngle(self.sprites[self.name + "Idle"][0])
+    else: 
+      self.sprite = self.updateSpriteAngle(self.sprites[self.name + "Idle"][0])
+  
   # Main methods
 
   # Logic for the placement of tower
@@ -106,16 +138,17 @@ class Tower(pygame.sprite.Sprite):
 
     if currentTime - self.lastShot > self.attackSpeed and self.active == True:
       progress = 0
-      target = None
+      self.target = None
 
       for alien in self.levelObj.getAliens():
         if pygame.sprite.collide_circle(self, alien):
           if alien.getProgress() > progress:
             progress = alien.getProgress()
-            target = alien
+            self.target = alien
 
-      if target != None:
-        self.shoot(self.rect.x, self.rect.y, target)
+      if self.target != None:
+        self.fired = True 
+        self.shoot(self.rect.x, self.rect.y, self.target)
 
       self.lastShot = currentTime
 
@@ -125,7 +158,7 @@ class Tower(pygame.sprite.Sprite):
 
 class Cannon(Tower):
   def __init__(self, levelObj, mapBoxes=None, active=True):
-    super().__init__(0, 0, 100, 10, 150, 500, False, levelObj, mapBoxes, "Cannon", pygame.image.load("assets/towers/cannon.png"), active)
+    super().__init__(0, 0, 100, 10, 150, 500, False, levelObj, mapBoxes, "cannon", pygame.image.load("assets/towers/cannon/cannonIdle.png"), active)
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
@@ -133,7 +166,7 @@ class Cannon(Tower):
     
 class Bomber(Tower):
   def __init__(self, levelObj, mapBoxes=None, active=True):
-    super().__init__(0, 0, 100, 10, 150, 1000, False, levelObj, mapBoxes, "Bomber", pygame.image.load("assets/towers/bomber.png"), active)
+    super().__init__(0, 0, 100, 10, 150, 1000, False, levelObj, mapBoxes, "bomber", pygame.image.load("assets/towers/bomber.png"), active)
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
@@ -141,7 +174,7 @@ class Bomber(Tower):
 
 class Catapult(Tower):
   def __init__(self, levelObj, mapBoxes=None, active=True):
-    super().__init__(0, 0, 100, 10, 150, 1000, False, levelObj, mapBoxes, "Catapult", pygame.image.load("assets/towers/catapult.png"), active)
+    super().__init__(0, 0, 100, 10, 200, 1000, False, levelObj, mapBoxes, "catapult", pygame.image.load("assets/towers/catapult/catapultIdle.png"), active)
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
