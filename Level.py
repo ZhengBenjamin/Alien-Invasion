@@ -31,6 +31,8 @@ class Level:
     self.maps.append([[864, 0, "down"], [864, 96, "left"], [96, 96, "down"], [96, 223, "right"], [864, 223, "down"], [864, 736, "left"], [544, 736, "up"], [544, 414, "left"], [96, 414, "down"], [96, 735, "right"], [288, 735, "down"], [288, 864, "right"]])
     self.mapBoxes.append([(14,1), (14,2), (13,2), (12,2), (11,2), (10,2), (9,2), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (2,3), (2,4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (9, 4), (10, 4), (11, 4), (12, 4), (13, 4), (14, 4), (14,5),(14, 6), (14, 7), (14, 8), (14, 9), (14, 10), (14, 11), (14, 12),(13, 12), (12, 12), (11, 12), (10, 12), (9, 12), (9, 11), (9, 10), (9, 9), (9, 8), (9, 7), (8, 7), (7, 7), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7), (2, 8), (2, 9), (2, 10), (2, 11), (2, 12), (3, 12), (4, 12), (5, 12), (5, 13), (5, 14), (6,14),(7, 14), (8, 14), (9, 14), (10, 14), (11, 14), (12, 14), (13, 14), (14, 14), (15, 14)])
     
+    self.occupiedBoxes = [] # List of boxes occupied by towers
+    
     # Timing of spawns
     self.lastSpawnEasy = pygame.time.get_ticks()
     self.lastSpawnMed = pygame.time.get_ticks()
@@ -53,6 +55,9 @@ class Level:
   
   def getMapBoxes(self):
     return self.mapBoxes[self.map]
+  
+  def getOccupiedBoxes(self):
+    return self.occupiedBoxes
   
   def getTowers(self):
     return self.towers
@@ -80,6 +85,9 @@ class Level:
 
   def addTower(self, tower):
     self.towers.add(tower)
+    
+  def addOccupiedBox(self, box):
+    self.occupiedBoxes.append(box)
 
   def addProjectile(self, projectile):
     self.projectiles.add(projectile)

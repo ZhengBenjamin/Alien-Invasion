@@ -25,6 +25,7 @@ class Tower(pygame.sprite.Sprite):
     self.splashDamage = splashDamage # If the tower has splash damage
     self.levelObj = levelObj # levelObj object
     self.mapBoxes = mapBoxes # Map boxes the tower can be placed on
+    self.box = None # Box the tower is placed on
     self.attackSpeed = attackSpeed # Attack speed of the tower
     self.active = active # If the tower is active
     self.name = name # Name of the tower
@@ -119,16 +120,17 @@ class Tower(pygame.sprite.Sprite):
     pos = pygame.mouse.get_pos()
     if self.checkPlacement(pos) == True:
       self.rect.topleft = ((pos[0] // 64) * 64 + 16, (pos[1] // 64) * 64 + 16)
-
+      self.box = (pos[0] // 64 + 1, pos[1] // 64 + 1)
     if Events.getMousePressed() == True:
       self.clicked += 1
       if self.clicked >= 2 and self.checkPlacement(pos) == True:
         self.placed = True
+        self.levelObj.addOccupiedBox(self.box)
       pass
 
   def checkPlacement(self, pos):
     box = (pos[0] // 64 + 1, pos[1] // 64 + 1)
-    if not (box in self.mapBoxes) and pos[0] < 960:
+    if not (box in self.mapBoxes) and not (box in self.levelObj.getOccupiedBoxes()) and pos[0] < 960:
       return True
     return False
 
