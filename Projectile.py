@@ -5,17 +5,26 @@ import os
 class Projectile(pygame.sprite.Sprite):
   
   # Constructor (int, int, int, int, Alien, String)
-  def __init__(self, x, y, speed, damage, target, image):
+  def __init__(self, x, y, levelObj, speed, damage, target, image, splashRange = 0):
     pygame.sprite.Sprite.__init__(self)
 
     self.rect = pygame.Rect(x, y, 10, 10) # Rectangular hitbox
+    self.levelObj = levelObj # Level object (Optional for non splash damage projectiles)
     self.speed = speed # Speed of projectile
     self.damage = damage # Damage of projectile
     self.target = target # Target of projectile
     self.collide = False # If the projectile has collided with the target
+    self.range = splashRange # Range of splash damage
     self.image = image
+    self.splashTargets = [] # List of aliens hit by splash damage
     
-    self.target.reduceHealth(self.damage)
+    if self.range == 0:
+      self.target.reduceHealth(self.damage)
+    else:
+      for alien in self.levelObj.getAliens():
+        if math.sqrt((alien.getPos()[0] - self.target.getPos()[0]) ** 2 + (alien.getPos()[1] - self.target.getPos()[1]) ** 2) <= self.range:
+          alien.reduceHealth(self.damage)
+          self.splashTargets.append(alien)
 
   # Getter methods:
 
@@ -51,7 +60,11 @@ class Projectile(pygame.sprite.Sprite):
       self.draw(window)
     else: 
       self.kill()
-      self.target.collideProj()
+      if self.range != 0: # If range != 0, check for splash damage
+        for alien in self.splashTargets:
+          alien.collideProj()
+      else: 
+        self.target.collideProj()
 
   # TODO: Projectile pathfinding is dookie :D fix later 
   def updatePath(self):
@@ -68,13 +81,13 @@ class Projectile(pygame.sprite.Sprite):
 # Projectile subclasses
 
 class CannonProj(Projectile):
-  def __init__(self, x, y, target):
-    super().__init__(x, y, 5, 10, target, pygame.image.load("assets/projectiles/cannonProj.png"))
+  def __init__(self, x, y, target, levelObj=None):
+    super().__init__(x, y, levelObj, 5, 10, target, pygame.image.load("assets/projectiles/cannonProj.png"))
   
 class BomberProj(Projectile):
-  def __init__(self, x, y, target):
-    super().__init__(x, y, 8, 5, target, pygame.image.load("assets/projectiles/bomberProj.png"))
+  def __init__(self, x, y, target, levelObj):
+    super().__init__(x, y, levelObj, 8, 15, target, pygame.transform.scale2x(pygame.image.load("assets/projectiles/bomberProj.png")), 20)
 
 class CatapultProj(Projectile):
-  def __init__(self, x, y, target):
-    super().__init__(x, y, 8, 25, target, pygame.image.load("assets/projectiles/catapultProj.png"))
+  def __init__(self, x, y, target, levelObj=None):
+    super().__init__(x, y, levelObj, 8, 25, target, pygame.image.load("assets/projectiles/catapultProj.png"))
