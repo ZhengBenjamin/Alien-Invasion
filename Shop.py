@@ -18,7 +18,7 @@ class Shop:
     self.events = None # Events
     self.map = 0 # Current map
 
-    self.towerCollection = [Cannon(None, None, False), Catapult(None, None, False)]
+    self.towerCollection = [Cannon(None, None, False), Bomber(None, None, False), Catapult(None, None, False)]
     self.towerButtons = self.makeTowerButtons(self.towerCollection)
 
   # Helper methods for constructor 

@@ -10,7 +10,8 @@ class Alien(pygame.sprite.Sprite):
     pygame.sprite.Sprite.__init__(self)
     
     self.sprites = Sprites.loadSpriteSheets("aliens", name, 16, 16, False) # Load the spritesheet
-    self.sprites["{}RunLeft".format(name)] = [Sprites.flip(sprite) for sprite in self.sprites["{}RunRight".format(name)]] # Flip the sprites for the left direction
+    self.sprites["{}RunLeft".format(name)] = [Sprites.flip(sprite) for sprite in self.sprites["{}RunRight".format(name)]] # Flip the sprites for left movement
+    self.sprites["{}RunLeftHit".format(name)] = [Sprites.flip(sprite) for sprite in self.sprites["{}RunRightHit".format(name)]] 
     self.sprite = None # Current sprite
 
     self.xOffset, self.yOffset = random.randrange(-8, 8), random.randrange(-8, 8) # Random offset
@@ -32,6 +33,7 @@ class Alien(pygame.sprite.Sprite):
     self.lastDistance = [9999, 9999] # Last distance from the next point on the path (Starting with arbitrarily large number)
     self.animationCount = 0 # Count for animation delay
     self.animationDelay = 3 # Delay between animations
+    self.hitAnimationCount = 0 # Hit animation frames remaining
 
   # Getter / Setter methods
 
@@ -95,12 +97,15 @@ class Alien(pygame.sprite.Sprite):
         self.kill()
         self.level.checkDone()
 
-        
-      
   def updateSprite(self):
     spriteSheet = self.name + "Run" + self.currentDirection.capitalize()
     animationIndex = self.animationCount // self.animationDelay % len(self.sprites[spriteSheet])
     self.sprite = self.sprites[spriteSheet][animationIndex]
+    if self.hit == True:
+      self.hitAnimationCount = 10
+    if self.hitAnimationCount > 0: 
+      self.sprite = self.sprites[self.name + "Run" + self.currentDirection.capitalize() + "Hit"][animationIndex]
+      self.hitAnimationCount -= 1
     self.animationCount += 1
 
   # Movement Methods

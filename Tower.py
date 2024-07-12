@@ -172,15 +172,15 @@ class Cannon(Tower):
     
 class Bomber(Tower):
   def __init__(self, levelObj, mapBoxes=None, active=True):
-    super().__init__(0, 0, 100, 10, 150, 1000, False, levelObj, mapBoxes, "bomber", pygame.image.load("assets/towers/bomber.png"), active)
+    super().__init__(0, 0, 100, 15, 100, 3000, False, levelObj, mapBoxes, "bomber", pygame.image.load("assets/towers/bomber/bomberIdle.png"), active)
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
-    self.levelObj.addProjectile(BomberProj(x, y, target))
+    self.levelObj.addProjectile(BomberProj(x, y, target, self.levelObj))
 
 class Catapult(Tower):
   def __init__(self, levelObj, mapBoxes=None, active=True):
-    super().__init__(0, 0, 100, 10, 200, 1000, False, levelObj, mapBoxes, "catapult", pygame.image.load("assets/towers/catapult/catapultIdle.png"), active)
+    super().__init__(0, 0, 100, 25, 200, 3000, False, levelObj, mapBoxes, "catapult", pygame.image.load("assets/towers/catapult/catapultIdle.png"), active)
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
