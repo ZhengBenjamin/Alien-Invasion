@@ -1,4 +1,5 @@
 import pygame
+import math
 import os 
 
 class Projectile(pygame.sprite.Sprite):
@@ -11,7 +12,6 @@ class Projectile(pygame.sprite.Sprite):
     self.speed = speed # Speed of projectile
     self.damage = damage # Damage of projectile
     self.target = target # Target of projectile
-    self.velocity = [0, 0] # Initial velocity
     self.collide = False # If the projectile has collided with the target
     self.image = image
     
@@ -34,20 +34,8 @@ class Projectile(pygame.sprite.Sprite):
   # Movement methods:
 
   def move(self, dx, dy):
-    self.rect.x += dx
-    self.rect.y += dy
-  
-  def moveRight(self):
-    self.velocity[0] = self.speed
-
-  def moveLeft(self):
-    self.velocity[0] = -self.speed
-
-  def moveUp(self):
-    self.velocity[1] = -self.speed
-
-  def moveDown(self):
-    self.velocity[1] = self.speed
+    self.rect.x = self.rect.x + dx
+    self.rect.y = self.rect.y + dy
 
   # Render methods: 
 
@@ -58,8 +46,8 @@ class Projectile(pygame.sprite.Sprite):
     self.checkCollide()
     
     if self.collide == False: 
-      self.updatePath()
-      self.move(self.velocity[0], self.velocity[1])
+      dx, dy = self.updatePath()
+      self.move(dx, dy)
       self.draw(window)
     else: 
       self.kill()
@@ -68,14 +56,10 @@ class Projectile(pygame.sprite.Sprite):
   # TODO: Projectile pathfinding is dookie :D fix later 
   def updatePath(self):
     targetX, targetY = self.target.getPos()
-    if targetX > self.rect.x:
-      self.moveRight()
-    if targetX < self.rect.x:
-      self.moveLeft()
-    if targetY > self.rect.y:
-      self.moveDown()
-    if targetY < self.rect.y:
-      self.moveUp()
+    angle = math.atan2(targetY - self.rect.y, targetX - self.rect.x)
+    dx = math.cos(angle) * self.speed
+    dy = math.sin(angle) * self.speed
+    return dx, dy
     
   def checkCollide(self):
     self.collide = self.rect.colliderect(self.target.getRect())
@@ -85,7 +69,7 @@ class Projectile(pygame.sprite.Sprite):
 
 class CannonProj(Projectile):
   def __init__(self, x, y, target):
-    super().__init__(x, y, 2, 10, target, pygame.image.load("assets/projectiles/cannonProj.png"))
+    super().__init__(x, y, 5, 10, target, pygame.image.load("assets/projectiles/cannonProj.png"))
   
 class BomberProj(Projectile):
   def __init__(self, x, y, target):
