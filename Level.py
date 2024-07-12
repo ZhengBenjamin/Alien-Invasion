@@ -127,7 +127,7 @@ class Level:
         self.lastSpawnEasy = currentTime
         self.spawned[0] += 1
 
-    if self.level >= 2 and self.level <= 10 and self.spawned[1] < 10: # Spawning logic for levels 6-10
+    if self.level >= 5 and self.level <= 10 and self.spawned[1] < 10: # Spawning logic for levels 6-10
       if currentTime - self.lastSpawnMed > self.spawnRateMed:
         self.aliens.add(BobaAlien(self.maps[0], self))
         self.lastSpawnMed = currentTime

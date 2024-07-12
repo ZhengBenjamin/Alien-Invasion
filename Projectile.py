@@ -14,6 +14,8 @@ class Projectile(pygame.sprite.Sprite):
     self.velocity = [0, 0] # Initial velocity
     self.collide = False # If the projectile has collided with the target
     self.image = image
+    
+    self.target.reduceHealth(self.damage)
 
   # Getter methods:
 
@@ -54,14 +56,14 @@ class Projectile(pygame.sprite.Sprite):
 
   def update(self, window):
     self.checkCollide()
-
+    
     if self.collide == False: 
       self.updatePath()
       self.move(self.velocity[0], self.velocity[1])
       self.draw(window)
     else: 
-      self.target.hit(self.damage)
       self.kill()
+      self.target.collideProj()
 
   # TODO: Projectile pathfinding is dookie :D fix later 
   def updatePath(self):
@@ -83,7 +85,7 @@ class Projectile(pygame.sprite.Sprite):
 
 class CannonProj(Projectile):
   def __init__(self, x, y, target):
-    super().__init__(x, y, 8, 10, target, pygame.image.load("assets/projectiles/cannonProj.png"))
+    super().__init__(x, y, 2, 10, target, pygame.image.load("assets/projectiles/cannonProj.png"))
   
 class BomberProj(Projectile):
   def __init__(self, x, y, target):

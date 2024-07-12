@@ -28,6 +28,7 @@ class Alien(pygame.sprite.Sprite):
     self.turn = 0 # Turn number on path
     self.currentDirection = path[0][2] # Current direction of the alien
     self.progress = 0 # Progress on the path
+    self.hit = False # If projectile collided with alien
     self.lastDistance = [9999, 9999] # Last distance from the next point on the path (Starting with arbitrarily large number)
     self.animationCount = 0 # Count for animation delay
     self.animationDelay = 3 # Delay between animations
@@ -58,8 +59,13 @@ class Alien(pygame.sprite.Sprite):
   def getProgress(self):
     return self.progress
   
-  def hit(self, damage):
+  # Called by projectile as soon as it spawns
+  def reduceHealth(self, damage):
     self.health -= damage
+  
+  # Called when projectile collides with alien 
+  def collideProj(self):
+    self.hit = True
 
   # Render Methods
 
@@ -67,20 +73,29 @@ class Alien(pygame.sprite.Sprite):
     window.blit(self.sprite, (self.rect.x, self.rect.y))
 
   def update(self, window):
-    if self.health > 0:
-      if self.rect.x > 980 or self.rect.x < -20 or self.rect.y > 980 or self.rect.y < -20:
+    # Checks if alien goes outside the map
+    if self.rect.x > 980 or self.rect.x < -20 or self.rect.y > 980 or self.rect.y < -20:
         self.kill()
         self.level.deductHealth(1)
         self.level.checkDone()
-      self.progress += self.speed
-      self.updatePath()
-      self.move(self.velocity[0], self.velocity[1])
-      self.updateSprite()
-      self.draw(window)
+    
+    # Updates movement 
+    self.progress += self.speed
+    self.updatePath()
+    self.move(self.velocity[0], self.velocity[1])
+    self.updateSprite()
+    self.draw(window)
+    
+    # Checks if alien is dead
+    if self.health > 0:
+      self.hit = False
     else: 
-      self.level.addMoney(self.reward)
-      self.kill()
-      self.level.checkDone()
+      if self.hit == True: # Only kills itself when projectile collides
+        self.level.addMoney(self.reward)
+        self.kill()
+        self.level.checkDone()
+
+        
       
   def updateSprite(self):
     spriteSheet = self.name + "Run" + self.currentDirection.capitalize()

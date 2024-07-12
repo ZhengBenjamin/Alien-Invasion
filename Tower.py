@@ -142,13 +142,21 @@ class Tower(pygame.sprite.Sprite):
 
       for alien in self.levelObj.getAliens():
         if pygame.sprite.collide_circle(self, alien):
-          if alien.getProgress() > progress:
+          if alien.getProgress() > progress and alien.getHealth() > 0:
             progress = alien.getProgress()
             self.target = alien
 
       if self.target != None:
         self.fired = True 
-        self.shoot(self.rect.x, self.rect.y, self.target)
+        targetX, targetY = self.target.getPos()
+        spawnOffset = [4, 4]
+        
+        if targetX - self.rect.x < 0:
+          spawnOffset[0] = spawnOffset[0] * -1
+        if targetY - self.rect.y < 0:
+          spawnOffset[1] = spawnOffset[1] * -1
+          
+        self.shoot(self.rect.x + spawnOffset[0], self.rect.y + spawnOffset[1], self.target)
 
       self.lastShot = currentTime
 
@@ -158,7 +166,7 @@ class Tower(pygame.sprite.Sprite):
 
 class Cannon(Tower):
   def __init__(self, levelObj, mapBoxes=None, active=True):
-    super().__init__(0, 0, 100, 10, 150, 500, False, levelObj, mapBoxes, "cannon", pygame.image.load("assets/towers/cannon/cannonIdle.png"), active)
+    super().__init__(0, 0, 100, 10, 150, 1000, False, levelObj, mapBoxes, "cannon", pygame.image.load("assets/towers/cannon/cannonIdle.png"), active)
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
