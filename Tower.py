@@ -149,12 +149,10 @@ class Tower(pygame.sprite.Sprite):
       if self.target != None:
         self.fired = True 
         targetX, targetY = self.target.getPos()
-        spawnOffset = [4, 4]
+        spawnOffset = [0, 0]
         
-        if targetX - self.rect.x < 0:
-          spawnOffset[0] = spawnOffset[0] * -1
-        if targetY - self.rect.y < 0:
-          spawnOffset[1] = spawnOffset[1] * -1
+        spawnOffset[0] = math.cos(math.atan2(targetY - self.rect.y, targetX - self.rect.x)) + 16
+        spawnOffset[1] = math.sin(math.atan2(targetY - self.rect.y, targetX - self.rect.x)) + 16
           
         self.shoot(self.rect.x + spawnOffset[0], self.rect.y + spawnOffset[1], self.target)
 
