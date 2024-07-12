@@ -36,8 +36,8 @@ class Level:
     # Timing of spawns
     self.lastSpawnEasy = pygame.time.get_ticks()
     self.lastSpawnMed = pygame.time.get_ticks()
-    self.spawnRateEasy = 300
-    self.spawnRateMed = 500
+    self.spawnRateEasy = 1000
+    self.spawnRateMed = 2500
 
   # Getter / Setter methods
   

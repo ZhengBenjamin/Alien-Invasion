@@ -9,7 +9,7 @@ class Shop:
   
   def __init__(self):
     self.rect = pygame.Rect(960, 0, 300, 960) # Rectangle containing shop
-    self.money = 2000 # Starting money
+    self.money = 200 # Starting money
     self.health = 100 # Starting health
     self.towers = pygame.sprite.Group() # List of towers
     self.selectedTower = None # Selected tower (for placement)

@@ -187,7 +187,7 @@ class Alien(pygame.sprite.Sprite):
     currentTime = pygame.time.get_ticks()
     
     if currentTime - self.lastRandom > random.randrange(500, 1500):
-      self.randomOffset = random.randrange(-22, 22)
+      self.randomOffset = random.randrange(-16, 16)
       self.lastRandom = currentTime
 
 
@@ -195,11 +195,11 @@ class Alien(pygame.sprite.Sprite):
 
 class Slime(Alien):
   def __init__(self, path, level):
-    super().__init__(15, 1, 10, path, level, "slime")
+    super().__init__(15, 1, 2, path, level, "slime")
 
 class BobaAlien(Alien):
   def __init__(self, path, level):
-    super().__init__(10, 1, 20, path, level, "boba")
+    super().__init__(25, 2, 5, path, level, "boba")
 
 class BigDaddyBen(Alien):
   def __init__(self, path, level):
