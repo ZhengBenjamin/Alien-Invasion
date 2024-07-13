@@ -6,7 +6,7 @@ from PIL import Image
 class Sprites:
   
   @staticmethod
-  def loadSpriteSheets(dir1: str, dir2: str, width: int, height: int, directional=False):
+  def loadSpriteSheets(dir1: str, dir2: str, width: int, height: int, directional=False, scale=2):
     path = os.path.join("assets", dir1, dir2) # Path to the spritesheet
     images = [file for file in os.listdir(path) if file.endswith('.png')] # Loads all images of specific sprite
     allSprites = {} # Dictionary to store all sprites in all spritesheets key: name of sprite, value: list of sprites
@@ -19,8 +19,8 @@ class Sprites:
         surface = pygame.Surface((width, height), pygame.SRCALPHA, 32) # Create a surface for the sprite
         rect = pygame.Rect(i * width, 0, width, height) # Create an invidiual rectangle for each sprite in spritesheet
         surface.blit(spriteSheet, (0, 0), rect) # Blit the sprite to the surface
-        sprites.append(pygame.transform.scale2x(surface))
-        # pygame.transform.scale2x(surface)
+        sprites.append(pygame.transform.scale_by(surface, scale))
+        # pygame.transform.scale_by(surface, 3)
         
       if directional:
         allSprites[image.replace(".png", "") + "Right"] = sprites # Add the sprites to the dictionary

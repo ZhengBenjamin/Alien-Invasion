@@ -6,15 +6,15 @@ from Sprites import *
 
 class Alien(pygame.sprite.Sprite):
   
-  def __init__ (self, health, speed, reward, path, level, name): 
+  def __init__ (self, health, speed, reward, path, level, name, scale=2): 
     pygame.sprite.Sprite.__init__(self)
     
-    self.sprites = Sprites.loadSpriteSheets("aliens", name, 16, 16, False) # Load the spritesheet
+    self.sprites = Sprites.loadSpriteSheets("aliens", name, 16, 16, False, scale) # Load the spritesheet
     self.sprites["{}RunLeft".format(name)] = [Sprites.flip(sprite) for sprite in self.sprites["{}RunRight".format(name)]] # Flip the sprites for left movement
     self.sprites["{}RunLeftHit".format(name)] = [Sprites.flip(sprite) for sprite in self.sprites["{}RunRightHit".format(name)]] 
     self.sprite = None # Current sprite
 
-    self.xOffset, self.yOffset = random.randrange(-8, 8), random.randrange(-8, 8) # Random offset
+    self.xOffset, self.yOffset = random.randrange(-6, 6), random.randrange(-6, 6) # Random offset
     self.randomOffset = 0 # Random offset for turns 
     self.lastRandom = pygame.time.get_ticks() # Last time the random offset was generated
 
@@ -199,13 +199,13 @@ class Slime(Alien):
 
 class BobaAlien(Alien):
   def __init__(self, path, level):
-    super().__init__(25, 2, 5, path, level, "boba")
+    super().__init__(25, 1, 5, path, level, "boba")
 
 class BigDaddyBen(Alien):
   def __init__(self, path, level):
     super().__init__(20, 1, 40, path, level, "bigDaddyBen")
 
 class SkateboardAlien(Alien):
-  def __init__(self, path):
-    super().__init__(15, 3, 30, path, "skateboardAlien")
+  def __init__(self, path, level):
+    super().__init__(15, 3, 30, path, level, "skateboard", 2.5)
 
