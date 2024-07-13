@@ -36,8 +36,10 @@ class Level:
     # Timing of spawns
     self.lastSpawnEasy = pygame.time.get_ticks()
     self.lastSpawnMed = pygame.time.get_ticks()
+    self.lastSpawnHard = pygame.time.get_ticks()
     self.spawnRateEasy = 1000
     self.spawnRateMed = 2500
+    self.spawnRateHard = 1500
 
   # Getter / Setter methods
   
@@ -135,16 +137,16 @@ class Level:
         self.lastSpawnEasy = currentTime
         self.spawned[0] += 1
 
-    # if self.level >= 5 and self.level <= 15 and self.spawned[1] < 10: # Spawning logic for levels 6-10
-    #   if currentTime - self.lastSpawnMed > self.spawnRateMed:
-    #     self.aliens.add(BobaAlien(self.maps[0], self))
-    #     self.lastSpawnMed = currentTime
-    #     self.spawned[1] += 1
-    
-    if self.level >= 2 and self.level <= 15 and self.spawned[1] < 10: # Spawning logic for levels 6-10
+    if self.level >= 5 and self.spawned[1] < 10 + (self.level - 5) * 2: # Spawning logic for levels 5-10
       if currentTime - self.lastSpawnMed > self.spawnRateMed:
-        self.aliens.add(SkateboardAlien(self.maps[0], self))
+        self.aliens.add(BobaAlien(self.maps[0], self))
         self.lastSpawnMed = currentTime
         self.spawned[1] += 1
+    
+    if self.level >= 10 and self.spawned[2] < 10 + (self.level - 10) * 2: # Spawning logic for levels 10-15
+      if currentTime - self.lastSpawnHard > self.spawnRateHard:
+        self.aliens.add(SkateboardAlien(self.maps[0], self))
+        self.lastSpawnHard = currentTime
+        self.spawned[2] += 1
 
 

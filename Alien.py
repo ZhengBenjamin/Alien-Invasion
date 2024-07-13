@@ -14,7 +14,7 @@ class Alien(pygame.sprite.Sprite):
     self.sprites["{}RunLeftHit".format(name)] = [Sprites.flip(sprite) for sprite in self.sprites["{}RunRightHit".format(name)]] 
     self.sprite = None # Current sprite
 
-    self.xOffset, self.yOffset = random.randrange(-6, 6), random.randrange(-6, 6) # Random offset
+    self.xOffset, self.yOffset = random.randrange(-8, 8), random.randrange(-8, 8) # Random offset
     self.randomOffset = 0 # Random offset for turns 
     self.lastRandom = pygame.time.get_ticks() # Last time the random offset was generated
 
@@ -187,7 +187,7 @@ class Alien(pygame.sprite.Sprite):
     currentTime = pygame.time.get_ticks()
     
     if currentTime - self.lastRandom > random.randrange(500, 1500):
-      self.randomOffset = random.randrange(-16, 16)
+      self.randomOffset = random.randrange(-8, 8)
       self.lastRandom = currentTime
 
 
@@ -199,7 +199,7 @@ class Slime(Alien):
 
 class BobaAlien(Alien):
   def __init__(self, path, level):
-    super().__init__(25, 1, 5, path, level, "boba")
+    super().__init__(30, 1, 5, path, level, "boba")
 
 class BigDaddyBen(Alien):
   def __init__(self, path, level):
@@ -207,5 +207,5 @@ class BigDaddyBen(Alien):
 
 class SkateboardAlien(Alien):
   def __init__(self, path, level):
-    super().__init__(15, 3, 30, path, level, "skateboard", 2.5)
+    super().__init__(45, 3, 7, path, level, "skateboard", 2.5)
 
