@@ -20,15 +20,18 @@ class Shop:
 
     self.towerCollection = [Cannon(None, None, False), Bomber(None, None, False), Catapult(None, None, False)]
     self.towerButtons = self.makeTowerButtons(self.towerCollection)
+    
+    self.headerFont = pygame.font.Font("assets/game_starters/font.ttf", 18)
+    self.subFont = pygame.font.Font("assets/game_starters/font.ttf", 12)
 
   # Helper methods for constructor 
 
   # Creates the buttons for each of the towers
   def makeTowerButtons(self, towerCollection):
-    yPos = 200 # Starting y position for the buttons
+    yPos = 400 # Starting y position for the buttons
     towerButtons = {}
     for tower in towerCollection:
-      towerButtons.update({tower: pygame.Rect(self.rect.x + 10, yPos, 275, 100)})
+      towerButtons.update({tower: pygame.Rect(self.rect.x + 15, yPos, 275, 100)})
       yPos += 150
 
     return towerButtons
@@ -83,19 +86,16 @@ class Shop:
     self.handleSelection()
 
   def shopGUI(self, window):
-    yPos = 200 # Starting y position for the buttons
-
     # Draw the shop
     window.blit(pygame.image.load("assets/shop/shop.png"), self.rect.topleft)
 
     # Draw the money
-    font = pygame.font.Font(None, 36)
-    money = font.render("Money: " + str(self.money), 1, (255, 255, 255))
-    level = font.render("Level: " + str(self.level), 1, (255, 255, 255))
-    health = font.render("Health: " + str(self.levelObj.getHealth()), 1, (255, 255, 255))
-    window.blit(money, (10, 10))
-    window.blit(level, (10, 30))
-    window.blit(health, (10, 50))
+    money = self.headerFont.render("Money: " + str(self.money), 1, (255, 255, 255))
+    level = self.headerFont.render("Level: " + str(self.level), 1, (255, 255, 255))
+    health = self.headerFont.render("Health: " + str(self.levelObj.getHealth()), 1, (255, 255, 255))
+    window.blit(money, (1010, 30))
+    window.blit(level, (1010, 55))
+    window.blit(health, (1010, 80))
 
     # Draw the buttons for each of the towers
     for tower in list(self.towerButtons.keys()):
@@ -107,18 +107,27 @@ class Shop:
     button = self.towerButtons[tower]
 
     window.blit(pygame.image.load("assets/shop/towerButton.png"), button.topleft)
-    tower.setPosition(button.x + 10, button.y + 24)
+    tower.setPosition(button.x + 20, button.y + 35)
     tower.draw(window)
 
-    font = pygame.font.Font(None, 18)
-    name = font.render("{}\nDamage: {}\nRange: {}\nCooldown: {}\nCost: {}".format(
-      tower.getName(), 
-      tower.getDamage(), 
-      tower.getRange(), 
-      tower.getAttackSpeed()/1000, 
-      tower.getCost()
-    ), 1, (255, 255, 255))
-    window.blit(name, (button.x + 50, button.y + 20))
+    name = self.subFont.render(tower.getName().capitalize(), 1, (255, 255, 255))
+    damage = self.subFont.render(str(tower.getDamage()) + " Damage", 1, (255, 255, 255))
+    reload = self.subFont.render(str(tower.getAttackSpeed() / 1000) + "s Reload", 1, (255, 255, 255))
+    range = self.subFont.render(str(tower.getRange()) + " Range", 1, (255, 255, 255))
+    cost = self.subFont.render(str(tower.getCost()), 1, (255, 255, 255))
+    
+    if tower.hasSplashDmg():
+      splash = self.subFont.render("Splash Damage", 1, (255, 255, 255))
+      window.blit(splash, (button.x + 80, button.y + 50))
+    
+    window.blit(name, (button.x + 80, button.y + 15))
+    window.blit(damage, (button.x + 100, button.y + 37))
+    window.blit(reload, (button.x + 100, button.y + 57))
+    window.blit(range, (button.x + 100, button.y + 77))
+    window.blit(cost, (button.x + 100, button.y + 10))
+    window.blit(pygame.image.load("assets/shop/damage.png"), (button.x + 70, button.y + 35))
+    window.blit(pygame.image.load("assets/shop/reload.png"), (button.x + 70, button.y + 55))
+    window.blit(pygame.image.load("assets/shop/range.png"), (button.x + 70, button.y + 75))
     
   # Main methods
 
@@ -151,8 +160,6 @@ class Shop:
       self.levelObj.addTower(Bomber(self.levelObj, self.levelObj.getMapBoxes()))
     elif tower.getName() == "catapult":
       self.levelObj.addTower(Catapult(self.levelObj, self.levelObj.getMapBoxes()))
-    else:
-      pass
   
     
 
