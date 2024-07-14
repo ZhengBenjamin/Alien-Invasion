@@ -34,11 +34,13 @@ class Level:
     self.occupiedBoxes = [] # List of boxes occupied by towers
     
     # Timing of spawns
+    self.totWave = self.level // 5 + 1
+    self.currentWave = 0
     self.lastSpawnEasy = pygame.time.get_ticks()
     self.lastSpawnMed = pygame.time.get_ticks()
     self.lastSpawnHard = pygame.time.get_ticks()
-    self.spawnRateEasy = 1000
-    self.spawnRateMed = 2500
+    self.spawnRateEasy = 600
+    self.spawnRateMed = 1000
     self.spawnRateHard = 1500
 
   # Getter / Setter methods
@@ -122,31 +124,89 @@ class Level:
     if self.health <= 0:
       self.lost = True
 
-    self.spawn()
+    self.spawnHandler()
     self.aliens.update(window)
     self.towers.update(window)
     self.projectiles.update(window)
 
   # Spawning logic for each level 
-  def spawn(self):
-    currentTime = pygame.time.get_ticks()
-
-    if self.level <= 15 and self.spawned[0] < 1 + self.level * 5: # Spawning logic for first 5 levels
-      if currentTime - self.lastSpawnEasy > self.spawnRateEasy:
-        self.aliens.add(Slime(self.maps[0], self))
-        self.lastSpawnEasy = currentTime
-        self.spawned[0] += 1
-
-    if self.level >= 5 and self.spawned[1] < 10 + (self.level - 5) * 2: # Spawning logic for levels 5-10
-      if currentTime - self.lastSpawnMed > self.spawnRateMed:
-        self.aliens.add(BobaAlien(self.maps[0], self))
-        self.lastSpawnMed = currentTime
-        self.spawned[1] += 1
+  def spawnHandler(self):
+    # Spawn limits per wave based on level
+    easySpawnLimit = 1 + int(math.log(self.level + 1) * 15)
+    medSpawnLimit = 0
+    hardSpawnLimit = 0
     
-    if self.level >= 10 and self.spawned[2] < 10 + (self.level - 10) * 2: # Spawning logic for levels 10-15
-      if currentTime - self.lastSpawnHard > self.spawnRateHard:
-        self.aliens.add(SkateboardAlien(self.maps[0], self))
-        self.lastSpawnHard = currentTime
-        self.spawned[2] += 1
+    if self.level >= 5 and self.level < 10:
+      medSpawnLimit = 1 + int(math.log(self.level + 1) * 5)
+    elif self.level >= 10: 
+      medSpawnLimit = 1 + int(math.log(self.level + 1) * 15)
+    
+    if self.level >= 10 and self.level < 15:
+      hardSpawnLimit = 1 + int(math.log(self.level + 1) * 5)
+    elif self.level >= 15:
+      hardSpawnLimit = 1 + int(math.log(self.level + 1) * 15)
+    
+    # Possible alien spawns, will be updated as levels progresses
+    easyAliens = ["slime"]
+    medAliens = ["boba"]
+    hardAliens = ["skateboard"]
+    
+    # Spawning logic for each wave
+    # There will be 3 waves, each with different difficultes 
+    if self.currentWave % 3 == 0: # Easy wave
+      print(easySpawnLimit, medSpawnLimit, hardSpawnLimit)
+      if self.spawned[0] < easySpawnLimit:
+        self.spawn(easyAliens, "easy")
+      if self.spawned[1] < medSpawnLimit // 2: 
+        self.spawn(medAliens, "med")
+      if self.spawned[0] > easySpawnLimit and self.spawned[1] > medSpawnLimit // 2:
+        self.currentWave += 1
+    
+    if self.currentWave % 3 == 1: # Medium wave
+      if self.spawned[0] < easySpawnLimit:
+        self.spawn(easyAliens, "easy")
+      if self.spawned[1] < medSpawnLimit:
+        self.spawn(medAliens, "med")
+      if self.spawned[2] < hardSpawnLimit // 2:
+        self.spawn(hardAliens, "hard")
+      if self.spawned[0] > medSpawnLimit and self.spawned[1] > medSpawnLimit and self.spawned[2] > hardSpawnLimit // 2:
+        self.currentWave += 1
+        
+    if self.currentWave % 3 == 2: # Hard wave
+      if self.spawned[0] < easySpawnLimit:
+        self.spawn(easyAliens, "easy")
+      if self.spawned[1] < medSpawnLimit:
+        self.spawn(medAliens, "med")
+      if self.spawned[2] < hardSpawnLimit:
+        self.spawn(hardAliens, "hard")
+      if self.spawned[0] > easySpawnLimit and self.spawned[1] > medSpawnLimit and self.spawned[2] > hardSpawnLimit:
+        self.currentWave += 1
+        
+  def spawn(self, possibleSpawn: list, difficulty: str):
+    currentTime = pygame.time.get_ticks()
+    # print(self.currentWave)
+    
+    match difficulty:
+      case "easy":
+        if currentTime - self.lastSpawnEasy > self.spawnRateEasy:
+          match possibleSpawn[random.randint(0, len(possibleSpawn) - 1)]: 
+            case "slime":
+              self.aliens.add(Slime(self.getMap(), self))
+          self.lastSpawnEasy = currentTime
+          self.spawned[0] += 1
+      case "med":
+        if currentTime - self.lastSpawnMed > self.spawnRateMed:
+          match possibleSpawn[random.randint(0, len(possibleSpawn) - 1)]: 
+            case "boba":
+              self.aliens.add(BobaAlien(self.getMap(), self))
+          self.lastSpawnMed = currentTime
+          self.spawned[1] += 1
+      case "hard":
+        if currentTime - self.lastSpawnHard > self.spawnRateHard:
+          match possibleSpawn[random.randint(0, len(possibleSpawn) - 1)]: 
+            case "skateboard":
+              self.aliens.add(SkateboardAlien(self.getMap(), self))
+          self.lastSpawnHard = currentTime
+        else: self.spawned[2] = 0
 
 
