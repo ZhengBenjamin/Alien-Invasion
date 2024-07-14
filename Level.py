@@ -9,10 +9,10 @@ class Level:
   
   def __init__(self, shop):
   
-    self.shop = shop
-    self.level = shop.getLevel()
-    self.map = shop.getMap()
-    self.health = 100
+    self.shop = shop # Shop object
+    self.level = shop.getLevel() # Level of the game
+    self.map = shop.getMap() # Map of the game
+    self.health = 100 # Health of the player
 
     # Sprite Groups / Count
     self.aliens = pygame.sprite.Group()
@@ -26,7 +26,7 @@ class Level:
 
     # Maps
     # Map layout: [[start], [verticies]]: [[startingDirection], [x, y, nextDirection]]
-    self.maps = []
+    self.maps = [] 
     self.mapBoxes = []
     self.maps.append([[864, 0, "down"], [864, 96, "left"], [96, 96, "down"], [96, 223, "right"], [864, 223, "down"], [864, 736, "left"], [544, 736, "up"], [544, 414, "left"], [96, 414, "down"], [96, 735, "right"], [288, 735, "down"], [288, 864, "right"]])
     self.mapBoxes.append([(14,1), (14,2), (13,2), (12,2), (11,2), (10,2), (9,2), (8, 2), (7, 2), (6, 2), (5, 2), (4, 2), (3, 2), (2, 2), (2,3), (2,4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4), (8, 4), (9, 4), (10, 4), (11, 4), (12, 4), (13, 4), (14, 4), (14,5),(14, 6), (14, 7), (14, 8), (14, 9), (14, 10), (14, 11), (14, 12),(13, 12), (12, 12), (11, 12), (10, 12), (9, 12), (9, 11), (9, 10), (9, 9), (9, 8), (9, 7), (8, 7), (7, 7), (6, 7), (5, 7), (4, 7), (3, 7), (2, 7), (2, 8), (2, 9), (2, 10), (2, 11), (2, 12), (3, 12), (4, 12), (5, 12), (5, 13), (5, 14), (6,14),(7, 14), (8, 14), (9, 14), (10, 14), (11, 14), (12, 14), (13, 14), (14, 14), (15, 14)])
@@ -34,15 +34,15 @@ class Level:
     self.occupiedBoxes = [] # List of boxes occupied by towers
     
     # Timing of spawns
-    self.totWave = self.level // 5
-    self.currentWave = 0
-    self.waveCooldown = 2000 
-    self.lastSpanwed = pygame.time.get_ticks()
+    self.totWave = self.level // 5 # Total number of waves
+    self.currentWave = 0 # Current wave
+    self.waveCooldown = 6000  # Cooldown between waves
+    self.lastSpanwed = pygame.time.get_ticks() # Last time an alien was spawned
     
-    self.lastSpawnEasy = pygame.time.get_ticks()
-    self.lastSpawnMed = pygame.time.get_ticks()
-    self.lastSpawnHard = pygame.time.get_ticks()
-    self.spawnRateEasy = 600
+    self.lastSpawnEasy = pygame.time.get_ticks() # Last time an easy alien was spawned
+    self.lastSpawnMed = pygame.time.get_ticks() # Last time a medium alien was spawned
+    self.lastSpawnHard = pygame.time.get_ticks() # Last time a hard alien was spawned
+    self.spawnRateEasy = 600 
     self.spawnRateMed = 1000
     self.spawnRateHard = 1500
 
@@ -142,14 +142,14 @@ class Level:
     hardSpawnLimit = 0
     
     if self.level >= 5 and self.level < 10:
-      medSpawnLimit = 1 + int(math.log(self.level + 1) * 5)
+      medSpawnLimit = 1 + int(math.log(self.level + 1) * 3)
     elif self.level >= 10: 
-      medSpawnLimit = 1 + int(math.log(self.level + 1) * 15)
+      medSpawnLimit = 1 + int(math.log(self.level + 1) * 10)
     
     if self.level >= 10 and self.level < 15:
-      hardSpawnLimit = 1 + int(math.log(self.level + 1) * 5)
+      hardSpawnLimit = 1 + int(math.log(self.level + 1) * 3)
     elif self.level >= 15:
-      hardSpawnLimit = 1 + int(math.log(self.level + 1) * 15)
+      hardSpawnLimit = 1 + int(math.log(self.level + 1) * 10)
     
     # Possible alien spawns, will be updated as levels progresses
     easyAliens = ["slime"]
@@ -170,8 +170,8 @@ class Level:
           self.spawned = [0, 0, 0, 0]
       
       if self.currentWave % 3 == 1: # Medium wave
-        print(self.currentWave, easySpawnLimit, medSpawnLimit, hardSpawnLimit // 2)
-        if self.spawned[0] < easySpawnLimit:
+        print(self.currentWave, easySpawnLimit // 2, medSpawnLimit, hardSpawnLimit // 2)
+        if self.spawned[0] < easySpawnLimit // 2:
           self.spawn(easyAliens, "easy")
         if self.spawned[1] < medSpawnLimit:
           self.spawn(medAliens, "med")
@@ -218,6 +218,7 @@ class Level:
             case "skateboard":
               self.aliens.add(SkateboardAlien(self.getMap(), self))
           self.lastSpawnHard = currentTime
+          self.spawned[2] += 1
         else: self.spawned[2] = 0
 
 
