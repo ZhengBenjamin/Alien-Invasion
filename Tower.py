@@ -174,7 +174,7 @@ class Cannon(Tower):
     
 class Bomber(Tower):
   def __init__(self, levelObj, mapBoxes=None, active=True):
-    super().__init__(0, 0, 500, 15, 100, 3000, False, levelObj, mapBoxes, "bomber", pygame.image.load("assets/towers/bomber/bomberIdle.png"), active)
+    super().__init__(0, 0, 500, 15, 100, 3000, True, levelObj, mapBoxes, "bomber", pygame.image.load("assets/towers/bomber/bomberIdle.png"), active)
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
