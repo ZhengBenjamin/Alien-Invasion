@@ -31,8 +31,8 @@ class Shop:
     yPos = 400 # Starting y position for the buttons
     towerButtons = {}
     for tower in towerCollection:
-      towerButtons.update({tower: pygame.Rect(self.rect.x + 15, yPos, 275, 100)})
-      yPos += 150
+      towerButtons.update({tower: pygame.Rect(self.rect.x + 15, yPos, 275, 150)})
+      yPos += 175
 
     return towerButtons
 
@@ -107,7 +107,7 @@ class Shop:
     button = self.towerButtons[tower]
 
     window.blit(pygame.image.load("assets/shop/towerButton.png"), button.topleft)
-    tower.setPosition(button.x + 20, button.y + 35)
+    tower.setPosition(button.x + 20, button.y + 59)
     tower.draw(window)
 
     name = self.subFont.render(tower.getName().capitalize(), 1, (255, 255, 255))
@@ -118,16 +118,18 @@ class Shop:
     
     if tower.hasSplashDmg():
       splash = self.subFont.render("Splash Damage", 1, (255, 255, 255))
-      window.blit(splash, (button.x + 80, button.y + 50))
+      window.blit(splash, (button.x + 100, button.y + 117))
+      window.blit(pygame.image.load("assets/shop/splash.png"), (button.x + 70, button.y + 115))
     
-    window.blit(name, (button.x + 80, button.y + 15))
-    window.blit(damage, (button.x + 100, button.y + 37))
-    window.blit(reload, (button.x + 100, button.y + 57))
-    window.blit(range, (button.x + 100, button.y + 77))
-    window.blit(cost, (button.x + 100, button.y + 10))
-    window.blit(pygame.image.load("assets/shop/damage.png"), (button.x + 70, button.y + 35))
-    window.blit(pygame.image.load("assets/shop/reload.png"), (button.x + 70, button.y + 55))
-    window.blit(pygame.image.load("assets/shop/range.png"), (button.x + 70, button.y + 75))
+    window.blit(name, (button.x + 70, button.y + 15))
+    window.blit(cost, (button.x + 100, button.y + 37))
+    window.blit(damage, (button.x + 100, button.y + 57))
+    window.blit(reload, (button.x + 100, button.y + 77))
+    window.blit(range, (button.x + 100, button.y + 97))
+    window.blit(pygame.image.load("assets/shop/cost.png"), (button.x + 70, button.y + 35))
+    window.blit(pygame.image.load("assets/shop/damage.png"), (button.x + 70, button.y + 55))
+    window.blit(pygame.image.load("assets/shop/reload.png"), (button.x + 70, button.y + 75))
+    window.blit(pygame.image.load("assets/shop/range.png"), (button.x + 70, button.y + 95))
     
   # Main methods
 
