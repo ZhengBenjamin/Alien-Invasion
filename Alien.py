@@ -195,11 +195,11 @@ class Alien(pygame.sprite.Sprite):
 
 class Slime(Alien):
   def __init__(self, path, level):
-    super().__init__(15, 1, 2, path, level, "slime")
+    super().__init__(15, 1, 1, path, level, "slime", 1.5)
 
 class BobaAlien(Alien):
   def __init__(self, path, level):
-    super().__init__(30, 1, 5, path, level, "boba")
+    super().__init__(40, 1, 2, path, level, "boba", 1.5)
 
 class BigDaddyBen(Alien):
   def __init__(self, path, level):
@@ -207,5 +207,5 @@ class BigDaddyBen(Alien):
 
 class SkateboardAlien(Alien):
   def __init__(self, path, level):
-    super().__init__(45, 3, 7, path, level, "skateboard", 2.5)
+    super().__init__(75, 3, 3, path, level, "skateboard", 1.5)
 
