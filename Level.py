@@ -34,8 +34,11 @@ class Level:
     self.occupiedBoxes = [] # List of boxes occupied by towers
     
     # Timing of spawns
-    self.totWave = self.level // 5 + 1
+    self.totWave = self.level // 5
     self.currentWave = 0
+    self.waveCooldown = 2000 
+    self.lastSpanwed = pygame.time.get_ticks()
+    
     self.lastSpawnEasy = pygame.time.get_ticks()
     self.lastSpawnMed = pygame.time.get_ticks()
     self.lastSpawnHard = pygame.time.get_ticks()
@@ -108,7 +111,7 @@ class Level:
       print("Game Over")
 
   def checkDone(self):
-    if len(self.aliens.sprites()) == 0:
+    if self.currentWave > self.totWave and len(self.aliens.sprites()) == 0:
       self.shop.updateLevel(self.towers, self.health)
       self.complete = True
       print("Level Complete")
@@ -131,6 +134,8 @@ class Level:
 
   # Spawning logic for each level 
   def spawnHandler(self):
+    currentTime = pygame.time.get_ticks()
+    
     # Spawn limits per wave based on level
     easySpawnLimit = 1 + int(math.log(self.level + 1) * 15)
     medSpawnLimit = 0
@@ -153,38 +158,44 @@ class Level:
     
     # Spawning logic for each wave
     # There will be 3 waves, each with different difficultes 
-    if self.currentWave % 3 == 0: # Easy wave
-      print(easySpawnLimit, medSpawnLimit, hardSpawnLimit)
-      if self.spawned[0] < easySpawnLimit:
-        self.spawn(easyAliens, "easy")
-      if self.spawned[1] < medSpawnLimit // 2: 
-        self.spawn(medAliens, "med")
-      if self.spawned[0] > easySpawnLimit and self.spawned[1] > medSpawnLimit // 2:
-        self.currentWave += 1
-    
-    if self.currentWave % 3 == 1: # Medium wave
-      if self.spawned[0] < easySpawnLimit:
-        self.spawn(easyAliens, "easy")
-      if self.spawned[1] < medSpawnLimit:
-        self.spawn(medAliens, "med")
-      if self.spawned[2] < hardSpawnLimit // 2:
-        self.spawn(hardAliens, "hard")
-      if self.spawned[0] > medSpawnLimit and self.spawned[1] > medSpawnLimit and self.spawned[2] > hardSpawnLimit // 2:
-        self.currentWave += 1
-        
-    if self.currentWave % 3 == 2: # Hard wave
-      if self.spawned[0] < easySpawnLimit:
-        self.spawn(easyAliens, "easy")
-      if self.spawned[1] < medSpawnLimit:
-        self.spawn(medAliens, "med")
-      if self.spawned[2] < hardSpawnLimit:
-        self.spawn(hardAliens, "hard")
-      if self.spawned[0] > easySpawnLimit and self.spawned[1] > medSpawnLimit and self.spawned[2] > hardSpawnLimit:
-        self.currentWave += 1
+    if self.currentWave <= self.totWave:
+      if self.currentWave % 3 == 0: # Easy wave
+        print(self.currentWave, easySpawnLimit, medSpawnLimit // 2, 0)
+        if self.spawned[0] < easySpawnLimit:
+          self.spawn(easyAliens, "easy")
+        if self.spawned[1] < medSpawnLimit // 2: 
+          self.spawn(medAliens, "med")
+        if self.spawned[0] >= easySpawnLimit and self.spawned[1] >= medSpawnLimit // 2 and currentTime - self.lastSpanwed > self.waveCooldown:
+          self.currentWave += 1
+          self.spawned = [0, 0, 0, 0]
+      
+      if self.currentWave % 3 == 1: # Medium wave
+        print(self.currentWave, easySpawnLimit, medSpawnLimit, hardSpawnLimit // 2)
+        if self.spawned[0] < easySpawnLimit:
+          self.spawn(easyAliens, "easy")
+        if self.spawned[1] < medSpawnLimit:
+          self.spawn(medAliens, "med")
+        if self.spawned[2] < hardSpawnLimit // 2:
+          self.spawn(hardAliens, "hard")
+        if self.spawned[0] >= medSpawnLimit and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit // 2 and currentTime - self.lastSpanwed > self.waveCooldown:
+          self.currentWave += 1
+          self.spawned = [0, 0, 0, 0]
+          
+      if self.currentWave % 3 == 2: # Hard wave
+        print(self.currentWave, easySpawnLimit, medSpawnLimit)
+        if self.spawned[0] < easySpawnLimit:
+          self.spawn(easyAliens, "easy")
+        if self.spawned[1] < medSpawnLimit:
+          self.spawn(medAliens, "med")
+        if self.spawned[2] < hardSpawnLimit:
+          self.spawn(hardAliens, "hard")
+        if self.spawned[0] >= easySpawnLimit and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit and currentTime - self.lastSpanwed > self.waveCooldown:
+          self.currentWave += 1
+          self.spawned = [0, 0, 0, 0]
         
   def spawn(self, possibleSpawn: list, difficulty: str):
     currentTime = pygame.time.get_ticks()
-    # print(self.currentWave)
+    self.lastSpanwed = pygame.time.get_ticks()
     
     match difficulty:
       case "easy":
