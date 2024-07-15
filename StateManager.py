@@ -15,7 +15,8 @@ class StateManager:
     self.states = ["StartMenu", "Game", "Lost"] # States of the game. Refernece only
     self.currentState = 0 # Starting state of the game (Index of states)
     
-    self.startMenu = StartMenu(width, height, window)
+    # self.startMenu = StartMenu(width, height, window)
+    self.startMenu = Start()
     self.shop = Shop()
     
     
@@ -50,10 +51,9 @@ class StateManager:
         self.currentState = self.states.index("StartMenu")
       
   def handleStartMenu(self):
-    self.startMenu.main_menu(self.window)
+    self.startMenu.draw(self.window)
     if self.startMenu.getStartStatus():
       self.changeState("Game")
-      print(self.getState())
   
   def handleGame(self):
     self.shop.draw(self.window)

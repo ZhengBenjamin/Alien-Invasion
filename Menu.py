@@ -70,4 +70,49 @@ class StartMenu:
         pygame.quit()
         sys.exit()
     
+
+class Start:
   
+  def __init__(self):
+    self.start = False
+    self.startMap = pygame.image.load("assets/menu/startMenu.png")
+
+    self.towers = pygame.sprite.Group()
+    self.aliens = pygame.sprite.Group()
+    self.projectiles = pygame.sprite.Group()
+
+    self.headerFont = pygame.font.Font("assets/game_starters/font.ttf", 52)
+    self.subFont = pygame.font.Font("assets/game_starters/font.ttf", 40)
+
+    self.PLAY_BUTTON = Button(pos=(120, 445), text_input="PLAY", font=self.subFont, base_color="#d7fcd4", hovering_color="White")
+    self.QUIT_BUTTON = Button(pos=(120, 520), text_input="QUIT", font=self.subFont, base_color="#d7fcd4", hovering_color="White")
+
+  def getStartStatus(self):
+    return self.start
+  
+  def update(self, window):
+    self.draw(window)
+    self.aliens.update(window)
+    self.towers.update(window)
+    self.projectiles.update(window)
+
+  def draw(self, window):
+    window.blit(self.startMap, (0, 0))
+    MENU_MOUSE_POS = pygame.mouse.get_pos()
+    
+    title = self.headerFont.render("Alien Invasion", True, "#ffffff")
+
+    for button in [self.PLAY_BUTTON, self.QUIT_BUTTON]:
+      button.changeColor(MENU_MOUSE_POS)
+      button.update(window)
+
+    if Events.getMousePressed() == True:
+      if self.PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+        self.start = True  # Transition to the main game loop
+        return
+      if self.QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+        pygame.quit()
+        sys.exit()
+
+    window.blit(title, (65, 350))
+
