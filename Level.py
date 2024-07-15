@@ -177,7 +177,7 @@ class Level:
           self.spawn(medAliens, "med")
         if self.spawned[2] < hardSpawnLimit // 2:
           self.spawn(hardAliens, "hard")
-        if self.spawned[0] >= medSpawnLimit and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit // 2 and currentTime - self.lastSpanwed > self.waveCooldown:
+        if self.spawned[0] >= medSpawnLimit // 2 and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit // 2 and currentTime - self.lastSpanwed > self.waveCooldown:
           self.currentWave += 1
           self.spawned = [0, 0, 0, 0]
           
@@ -193,7 +193,7 @@ class Level:
           self.currentWave += 1
           self.spawned = [0, 0, 0, 0]
       
-      print(self.spawned)
+      print(self.spawned, self.currentWave, self.totWave)
         
   def spawn(self, possibleSpawn: list, difficulty: str):
     currentTime = pygame.time.get_ticks()
