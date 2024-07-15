@@ -36,7 +36,7 @@ class Level:
     # Timing of spawns
     self.totWave = self.level // 5 # Total number of waves
     self.currentWave = 0 # Current wave
-    self.waveCooldown = 6000  # Cooldown between waves
+    self.waveCooldown = 5000  # Cooldown between waves
     self.lastSpanwed = pygame.time.get_ticks() # Last time an alien was spawned
     
     self.lastSpawnEasy = pygame.time.get_ticks() # Last time an easy alien was spawned
@@ -192,6 +192,8 @@ class Level:
         if self.spawned[0] >= easySpawnLimit and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit and currentTime - self.lastSpanwed > self.waveCooldown:
           self.currentWave += 1
           self.spawned = [0, 0, 0, 0]
+      
+      print(self.spawned)
         
   def spawn(self, possibleSpawn: list, difficulty: str):
     currentTime = pygame.time.get_ticks()
@@ -219,6 +221,5 @@ class Level:
               self.aliens.add(SkateboardAlien(self.getMap(), self))
           self.lastSpawnHard = currentTime
           self.spawned[2] += 1
-        else: self.spawned[2] = 0
 
 
