@@ -137,7 +137,7 @@ class Level:
     currentTime = pygame.time.get_ticks()
     
     # Spawn limits per wave based on level
-    easySpawnLimit = 1 + int(math.log(self.level + 1) * 15)
+    easySpawnLimit = 1 + int(math.log(self.level + 1) * 13)
     medSpawnLimit = 0
     hardSpawnLimit = 0
     
