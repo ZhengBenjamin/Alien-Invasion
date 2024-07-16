@@ -51,7 +51,7 @@ class StateManager:
         self.currentState = self.states.index("StartMenu")
       
   def handleStartMenu(self):
-    self.startMenu.draw(self.window)
+    self.startMenu.update(self.window)
     if self.startMenu.getStartStatus():
       self.changeState("Game")
   

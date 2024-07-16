@@ -27,11 +27,13 @@ class Tower(pygame.sprite.Sprite):
     self.mapBoxes = mapBoxes # Map boxes the tower can be placed on
     self.box = None # Box the tower is placed on
     self.attackSpeed = attackSpeed # Attack speed of the tower
+    self.aliens = [] # List of aliens the tower can target
     self.active = active # If the tower is active
     self.name = name # Name of the tower
     self.clicked = 0 # If the tower has been clicked
     self.target = None # Alien target 
     self.fired = False # If tower fired. Used for fire animation 
+    self.menu = None # Menu object for title screen
     
     self.animationCount = 0 # Count for animation delay
     self.animationDelay = 3 # Delay between animations 
@@ -73,6 +75,15 @@ class Tower(pygame.sprite.Sprite):
 
   def setLevelObj(self, levelObj):
     self.levelObj = levelObj
+
+  def updateAliens(self, aliens):
+    self.aliens = aliens
+
+  def setPlaced(self):
+    self.placed = True
+
+  def setMenu(self, menu):
+    self.menu = menu
   
   # Render methods
 
@@ -85,7 +96,7 @@ class Tower(pygame.sprite.Sprite):
 
   def update(self, window):
     
-    if self.placed == False:
+    if self.placed == False and self.levelObj != None:
       self.updatePlacement()
     else: 
       self.updateSprite()
@@ -142,7 +153,7 @@ class Tower(pygame.sprite.Sprite):
       progress = 0
       self.target = None
 
-      for alien in self.levelObj.getAliens():
+      for alien in self.aliens:
         if pygame.sprite.collide_circle(self, alien):
           if alien.getProgress() > progress and alien.getHealth() > 0:
             progress = alien.getProgress()
@@ -170,7 +181,8 @@ class Cannon(Tower):
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
-    self.levelObj.addProjectile(CannonProj(x, y, target))
+    if self.levelObj != None: self.levelObj.addProjectile(CannonProj(x, y, target))
+    else: self.menu.addProjectile(CannonProj(x, y, target))
     
 class Bomber(Tower):
   def __init__(self, levelObj, mapBoxes=None, active=True):
@@ -178,12 +190,14 @@ class Bomber(Tower):
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
-    self.levelObj.addProjectile(BomberProj(x, y, target, self.levelObj))
+    if self.levelObj != None: self.levelObj.addProjectile(BomberProj(x, y, target, self.levelObj))
+    else: self.menu.addProjectile(BomberProj(x, y, target, self.levelObj))
 
 class Catapult(Tower):
   def __init__(self, levelObj, mapBoxes=None, active=True):
-    super().__init__(0, 0, 300, 25, 200, 3000, False, levelObj, mapBoxes, "catapult", pygame.image.load("assets/towers/catapult/catapultIdle.png"), active)
+    super().__init__(0, 0, 300, 25, 300, 3000, False, levelObj, mapBoxes, "catapult", pygame.image.load("assets/towers/catapult/catapultIdle.png"), active)
     self.levelObj = levelObj
   
   def shoot(self, x, y, target):
-    self.levelObj.addProjectile(CatapultProj(x, y, target))
+    if self.levelObj != None: self.levelObj.addProjectile(CatapultProj(x, y, target))
+    else: self.menu.addProjectile(CatapultProj(x, y, target))

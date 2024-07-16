@@ -189,7 +189,7 @@ class Level:
         if self.spawned[0] >= easySpawnLimit and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit and currentTime - self.lastSpanwed > self.waveCooldown:
           self.currentWave += 1
           self.spawned = [0, 0, 0, 0]
-        
+          
   def spawn(self, possibleSpawn: list, difficulty: str):
     currentTime = pygame.time.get_ticks()
     self.lastSpanwed = pygame.time.get_ticks()

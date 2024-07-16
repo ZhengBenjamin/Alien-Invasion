@@ -78,8 +78,9 @@ class Alien(pygame.sprite.Sprite):
     # Checks if alien goes outside the map
     if self.rect.x > 980 or self.rect.x < -20 or self.rect.y > 980 or self.rect.y < -20:
         self.kill()
-        self.level.deductHealth(1)
-        self.level.checkDone()
+        if self.level != None:
+          self.level.deductHealth(1)
+          self.level.checkDone()
     
     # Updates movement 
     self.progress += self.speed
@@ -93,9 +94,10 @@ class Alien(pygame.sprite.Sprite):
       self.hit = False
     else: 
       if self.hit == True: # Only kills itself when projectile collides
-        self.level.addMoney(self.reward)
         self.kill()
-        self.level.checkDone()
+        if self.level != None:
+          self.level.addMoney(self.reward)
+          self.level.checkDone()
 
   def updateSprite(self):
     spriteSheet = self.name + "Run" + self.currentDirection.capitalize()
