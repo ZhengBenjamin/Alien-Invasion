@@ -22,6 +22,7 @@ class Shop:
     self.towerCollection = [Cannon(None, None, False), Bomber(None, None, False), Catapult(None, None, False)]
     self.towerButtons = self.makeTowerButtons(self.towerCollection)
     
+    self.titleFont = pygame.font.Font("assets/game_starters/font.ttf", 32)
     self.headerFont = pygame.font.Font("assets/game_starters/font.ttf", 18)
     self.subFont = pygame.font.Font("assets/game_starters/font.ttf", 12)
 
@@ -95,9 +96,11 @@ class Shop:
     money = self.headerFont.render("Money: " + str(self.money), 1, (255, 255, 255))
     level = self.headerFont.render("Level: " + str(self.level), 1, (255, 255, 255))
     health = self.headerFont.render("Health: " + str(self.levelObj.getHealth()), 1, (255, 255, 255))
+    shopTitle = self.titleFont.render("Shop", 1, (255, 255, 255))
     window.blit(money, (1010, 30))
     window.blit(level, (1010, 55))
     window.blit(health, (1010, 80))
+    window.blit(shopTitle, (1050, 350))
 
     # Draw the buttons for each of the towers
     for tower in list(self.towerButtons.keys()):
