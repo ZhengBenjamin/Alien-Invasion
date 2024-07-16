@@ -128,9 +128,14 @@ class Level:
       self.lost = True
 
     self.spawnHandler()
+    self.updateTowerAliens()
     self.aliens.update(window)
     self.towers.update(window)
     self.projectiles.update(window)
+
+  def updateTowerAliens(self):
+    for tower in self.towers:
+      tower.updateAliens(self.aliens)
 
   # Spawning logic for each level 
   def spawnHandler(self):
@@ -189,7 +194,7 @@ class Level:
         if self.spawned[0] >= easySpawnLimit and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit and currentTime - self.lastSpanwed > self.waveCooldown:
           self.currentWave += 1
           self.spawned = [0, 0, 0, 0]
-          
+
   def spawn(self, possibleSpawn: list, difficulty: str):
     currentTime = pygame.time.get_ticks()
     self.lastSpanwed = pygame.time.get_ticks()
