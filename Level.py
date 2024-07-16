@@ -99,6 +99,9 @@ class Level:
   def addProjectile(self, projectile):
     self.projectiles.add(projectile)
 
+  def setOccupiedBoxes(self, boxes):
+    self.occupiedBoxes = boxes
+
   def updateTowers(self, towers):
     self.towers = towers
     for tower in towers:
@@ -112,7 +115,7 @@ class Level:
 
   def checkDone(self):
     if self.currentWave > self.totWave and len(self.aliens.sprites()) == 0:
-      self.shop.updateLevel(self.towers, self.health)
+      self.shop.updateLevel(self.towers, self.health, self.occupiedBoxes)
       self.complete = True
       print("Level Complete")
 

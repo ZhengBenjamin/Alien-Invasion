@@ -17,6 +17,7 @@ class Shop:
     self.level = 0 # Current level
     self.events = None # Events
     self.map = 0 # Current map
+    self.occupiedBoxes = [] # List of boxes occupied by towers
 
     self.towerCollection = [Cannon(None, None, False), Bomber(None, None, False), Catapult(None, None, False)]
     self.towerButtons = self.makeTowerButtons(self.towerCollection)
@@ -59,9 +60,10 @@ class Shop:
   def setEvents(self, events):
     self.events = events
 
-  def updateLevel(self, towers, health):
+  def updateLevel(self, towers, health, occupiedBoxes):
     self.towers = towers
     self.health = health
+    self.occupiedBoxes = occupiedBoxes
 
   # Render methods
 
@@ -137,6 +139,7 @@ class Shop:
     self.levelObj = Level(self)
     self.levelObj.updateTowers(self.towers)
     self.levelObj.setHealth(self.health)
+    self.levelObj.setOccupiedBoxes(self.occupiedBoxes)
     print("Starting level " + str(self.level))
   
   def selectTower(self, tower):
