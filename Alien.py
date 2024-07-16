@@ -30,10 +30,12 @@ class Alien(pygame.sprite.Sprite):
     self.currentDirection = path[0][2] # Current direction of the alien
     self.progress = 0 # Progress on the path
     self.hit = False # If projectile collided with alien
+    self.killed = False # If alien is killed
     self.lastDistance = [9999, 9999] # Last distance from the next point on the path (Starting with arbitrarily large number)
     self.animationCount = 0 # Count for animation delay
     self.animationDelay = 3 # Delay between animations
     self.hitAnimationCount = 0 # Hit animation frames remaining
+    self.deathAnimationCount = 0 # Frames for death animation
 
   # Getter / Setter methods
 
@@ -88,12 +90,15 @@ class Alien(pygame.sprite.Sprite):
     self.move(self.velocity[0], self.velocity[1])
     self.updateSprite()
     self.draw(window)
-    
+
     # Checks if alien is dead
     if self.health > 0:
       self.hit = False
     else: 
-      if self.hit == True: # Only kills itself when projectile collides
+      if self.hit == True:
+        self.deathAnimationCount = 20
+        self.hit = False
+      if self.killed == True: # Only kills itself when projectile collides
         self.kill()
         if self.level != None:
           self.level.addMoney(self.reward)
@@ -108,6 +113,12 @@ class Alien(pygame.sprite.Sprite):
     if self.hitAnimationCount > 0: 
       self.sprite = self.sprites[self.name + "Run" + self.currentDirection.capitalize() + "Hit"][animationIndex]
       self.hitAnimationCount -= 1
+    if self.deathAnimationCount > 0:
+      self.sprite = self.sprites[self.name + "Run" + self.currentDirection.capitalize() + "Hit"][animationIndex]
+      self.deathAnimationCount -= 1
+      self.velocity = [0, 0]
+      if self.deathAnimationCount == 0:
+        self.killed = True
     self.animationCount += 1
 
   # Movement Methods
