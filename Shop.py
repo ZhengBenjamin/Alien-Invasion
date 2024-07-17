@@ -58,6 +58,9 @@ class Shop:
   def getMap(self):
     return self.map
   
+  def towerPlaced(self):
+    self.selectedTower = None
+  
   def setEvents(self, events):
     self.events = events
 
@@ -87,6 +90,7 @@ class Shop:
       self.level += 1
       self.startLevel()
     self.handleSelection()
+    print(self.selectedTower)
 
   def shopGUI(self, window):
     # Draw the shop
@@ -149,14 +153,14 @@ class Shop:
     self.selectedTower = tower 
   
   def handleSelection(self):
-    if Events.getMousePressed() == True:
+    if Events.getMousePressed() == True and self.selectedTower == None:
       pos = pygame.mouse.get_pos()
       for tower in list(self.towerButtons.keys()):
         if self.towerButtons.get(tower).collidepoint(pos):
           if self.money >= tower.getCost():
             self.selectTower(tower)
             self.deductMoney(tower.getCost())
-            self.addTower(tower)
+            self.addTower(self.selectedTower)
           else:
             print("Not enough money")
 

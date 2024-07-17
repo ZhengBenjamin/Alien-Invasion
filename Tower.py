@@ -95,7 +95,6 @@ class Tower(pygame.sprite.Sprite):
     window.blit(self.sprite, self.rect.topleft)
 
   def update(self, window):
-    
     if self.placed == False and self.levelObj != None:
       self.updatePlacement()
     else: 
@@ -137,7 +136,6 @@ class Tower(pygame.sprite.Sprite):
       if self.clicked >= 2 and self.checkPlacement(pos) == True:
         self.placed = True
         self.levelObj.addOccupiedBox(self.box)
-      pass
 
   def checkPlacement(self, pos):
     box = (pos[0] // 64 + 1, pos[1] // 64 + 1)

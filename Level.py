@@ -95,6 +95,7 @@ class Level:
     
   def addOccupiedBox(self, box):
     self.occupiedBoxes.append(box)
+    self.shop.towerPlaced()
 
   def addProjectile(self, projectile):
     self.projectiles.add(projectile)
