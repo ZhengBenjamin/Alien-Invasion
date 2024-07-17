@@ -65,6 +65,9 @@ class Shop:
   def getLevel(self):
     return self.level
   
+  def getLevelObj(self):
+    return self.levelObj
+  
   def getMap(self):
     return self.map
   

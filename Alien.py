@@ -36,6 +36,7 @@ class Alien(pygame.sprite.Sprite):
     self.animationDelay = 3 # Delay between animations
     self.hitAnimationCount = 0 # Hit animation frames remaining
     self.deathAnimationCount = 0 # Frames for death animation
+    self.menu = False # If the alien is in the menu
 
   # Getter / Setter methods
 
@@ -63,6 +64,9 @@ class Alien(pygame.sprite.Sprite):
   def getProgress(self):
     return self.progress
   
+  def setMenu(self):
+    self.menu = True
+  
   # Called by projectile as soon as it spawns
   def reduceHealth(self, damage):
     self.health -= damage
@@ -78,11 +82,15 @@ class Alien(pygame.sprite.Sprite):
 
   def update(self, window):
     # Checks if alien goes outside the map
-    if self.rect.x > 980 or self.rect.x < -20 or self.rect.y > 980 or self.rect.y < -20:
+    if self.menu == False:
+      if self.rect.x > 980 or self.rect.x < -20 or self.rect.y > 980 or self.rect.y < -20:
         self.kill()
         if self.level != None:
           self.level.deductHealth(1)
           self.level.checkDone()
+    else: 
+      if self.rect.x > 1260 or self.rect.x < -20 or self.rect.y > 980 or self.rect.y < -20:
+        self.kill()
     
     # Updates movement 
     self.progress += self.speed
