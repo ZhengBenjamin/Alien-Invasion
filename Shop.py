@@ -3,6 +3,7 @@ import os
 from Level import *
 from Tower import *
 from Events import *
+from Toaster import *
 from pathlib import Path
 
 class Shop:
@@ -20,11 +21,20 @@ class Shop:
     self.occupiedBoxes = [] # List of boxes occupied by towers
 
     self.towerCollection = [Cannon(None, None, False), Bomber(None, None, False), Catapult(None, None, False)]
+
     self.towerButtons = self.makeTowerButtons(self.towerCollection)
     
     self.titleFont = pygame.font.Font("assets/game_starters/font.ttf", 32)
     self.headerFont = pygame.font.Font("assets/game_starters/font.ttf", 18)
+    self.toasterFont = pygame.font.Font("assets/game_starters/font.ttf", 16)
     self.subFont = pygame.font.Font("assets/game_starters/font.ttf", 12)
+    
+    self.placementToast = Toaster((985, 300), "Place your tower", 10, self.toasterFont, (255, 255, 255))
+    self.noMoneyToast = Toaster((985, 300), "Not enough money", 1500, self.toasterFont, (255, 0, 0))
+    
+    self.toasters = [] 
+    self.toasters.append(self.placementToast)
+    self.toasters.append(self.noMoneyToast)
 
   # Helper methods for constructor 
 
@@ -76,6 +86,9 @@ class Shop:
     self.update()
     self.levelObj.draw(window)
     self.shopGUI(window)
+    
+    for toast in self.toasters:
+      toast.draw(window)
   
   # Updates the shop and the level
   def update(self):
@@ -90,7 +103,6 @@ class Shop:
       self.level += 1
       self.startLevel()
     self.handleSelection()
-    print(self.selectedTower)
 
   def shopGUI(self, window):
     # Draw the shop
@@ -162,7 +174,10 @@ class Shop:
             self.deductMoney(tower.getCost())
             self.addTower(self.selectedTower)
           else:
+            self.noMoneyToast.update()
             print("Not enough money")
+    if self.selectedTower != None:
+      self.placementToast.update()
 
   # Adds tower object to level
   def addTower(self, tower):
