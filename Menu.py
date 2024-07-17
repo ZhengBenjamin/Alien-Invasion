@@ -52,7 +52,7 @@ class Start:
 
     for button in [self.PLAY_BUTTON, self.QUIT_BUTTON]:
       button.changeColor(MENU_MOUSE_POS)
-      button.update(window)
+      button.draw(window)
 
     if Events.getMousePressed() == True:
       if self.PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
@@ -134,7 +134,7 @@ class Lost:
     
     for button in [self.MENU_BUTTON, self.QUIT_BUTTON]:
       button.changeColor(MENU_MOUSE_POS)
-      button.update(window)
+      button.draw(window)
       
     if Events.getMousePressed() == True:
       if self.MENU_BUTTON.checkForInput(MENU_MOUSE_POS):

@@ -4,6 +4,7 @@ from Level import *
 from Tower import *
 from Events import *
 from Toaster import *
+from Button import *
 from pathlib import Path
 
 class Shop:
@@ -28,6 +29,8 @@ class Shop:
     self.headerFont = pygame.font.Font("assets/game_starters/font.ttf", 18)
     self.toasterFont = pygame.font.Font("assets/game_starters/font.ttf", 16)
     self.subFont = pygame.font.Font("assets/game_starters/font.ttf", 12)
+    
+    self.startButton = Button((1035, 225), "Start", self.titleFont, (0, 255, 0), (255, 255, 255))
     
     self.placementToast = Toaster((985, 300), "Place your tower", 10, self.toasterFont, (255, 255, 255))
     self.noMoneyToast = Toaster((985, 300), "Not enough money", 1500, self.toasterFont, (255, 0, 0))
@@ -86,15 +89,16 @@ class Shop:
 
   # Renders the shop and the level
   def draw(self, window):
-    self.update()
+    self.update(window)
     self.levelObj.draw(window)
     self.shopGUI(window)
+    self.startButton.draw(window)
     
     for toast in self.toasters:
       toast.draw(window)
   
   # Updates the shop and the level
-  def update(self):
+  def update(self, window):
     if self.levelObj == None:
       self.level = 1
       self.startLevel()
@@ -102,9 +106,10 @@ class Shop:
       self.level = 1
       self.towers = pygame.sprite.Group() # Clears player towers 
     elif self.levelObj.isComplete():
-      print("Level Complete")
       self.level += 1
       self.startLevel()
+      
+    self.handleStartButton(window)
     self.handleSelection()
 
   def shopGUI(self, window):
@@ -115,10 +120,12 @@ class Shop:
     money = self.headerFont.render("Money: " + str(self.money), 1, (255, 255, 255))
     level = self.headerFont.render("Level: " + str(self.level), 1, (255, 255, 255))
     health = self.headerFont.render("Health: " + str(self.levelObj.getHealth()), 1, (255, 255, 255))
+    wave = self.headerFont.render("Wave: {}/{}".format(self.levelObj.getCurrentWave() + 1, self.levelObj.getTotWave() + 1), 1, (255, 255, 255))
     shopTitle = self.titleFont.render("Shop", 1, (255, 255, 255))
     window.blit(money, (1010, 30))
     window.blit(level, (1010, 55))
     window.blit(health, (1010, 80))
+    window.blit(wave, (1010, 105))
     window.blit(shopTitle, (1050, 350))
 
     # Draw the buttons for each of the towers
@@ -162,10 +169,15 @@ class Shop:
     self.levelObj.updateTowers(self.towers)
     self.levelObj.setHealth(self.health)
     self.levelObj.setOccupiedBoxes(self.occupiedBoxes)
-    print("Starting level " + str(self.level))
   
   def selectTower(self, tower):
     self.selectedTower = tower 
+  
+  def handleStartButton(self, window):
+    self.startButton.changeColor(pygame.mouse.get_pos())
+    
+    if Events.getMousePressed() == True and self.startButton.checkForInput(pygame.mouse.get_pos()):
+      self.levelObj.start()
   
   def handleSelection(self):
     if Events.getMousePressed() == True and self.selectedTower == None:
@@ -178,7 +190,6 @@ class Shop:
             self.addTower(self.selectedTower)
           else:
             self.noMoneyToast.update()
-            print("Not enough money")
     if self.selectedTower != None:
       self.placementToast.update()
 

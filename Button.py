@@ -11,7 +11,7 @@ class Button():
 		self.rect = pygame.Rect(self.x_pos, self.y_pos, self.text.get_width(), self.text.get_height())
 		self.text_rect = self.text.get_rect(topleft=(self.x_pos, self.y_pos))
 
-	def update(self, screen):
+	def draw(self, screen):
 		screen.blit(self.text, self.text_rect)
 
 	def checkForInput(self, position):

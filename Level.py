@@ -13,6 +13,7 @@ class Level:
     self.level = shop.getLevel() # Level of the game
     self.map = shop.getMap() # Map of the game
     self.health = 100 # Health of the player
+    self.startLevel = False # If the level has started
 
     # Sprite Groups / Count
     self.aliens = pygame.sprite.Group()
@@ -75,6 +76,12 @@ class Level:
   def getHealth(self):
     return self.health
   
+  def getCurrentWave(self):
+    return self.currentWave
+  
+  def getTotWave(self):
+    return self.totWave
+  
   def getLevel(self):
     return self.level
 
@@ -83,6 +90,9 @@ class Level:
   
   def isLost(self):
     return self.lost
+  
+  def start(self):
+    self.startLevel = True
 
   def setHealth(self, health):
     self.health = health
@@ -115,10 +125,9 @@ class Level:
       print("Game Over")
 
   def checkDone(self):
-    if self.currentWave > self.totWave and len(self.aliens.sprites()) == 0:
+    if self.currentWave == self.totWave and len(self.aliens.sprites()) == 0:
       self.shop.updateLevel(self.towers, self.health, self.occupiedBoxes)
       self.complete = True
-      print("Level Complete")
 
   # Draws the window and updates the sprites
   def draw(self, window):
@@ -173,7 +182,7 @@ class Level:
           self.spawn(easyAliens, "easy")
         if self.spawned[1] < medSpawnLimit // 2: 
           self.spawn(medAliens, "med")
-        if self.spawned[0] >= easySpawnLimit and self.spawned[1] >= medSpawnLimit // 2 and currentTime - self.lastSpanwed > self.waveCooldown:
+        if self.spawned[0] >= easySpawnLimit and self.spawned[1] >= medSpawnLimit // 2 and currentTime - self.lastSpanwed > self.waveCooldown and self.currentWave < self.totWave:
           self.currentWave += 1
           self.spawned = [0, 0, 0, 0]
       
@@ -184,7 +193,7 @@ class Level:
           self.spawn(medAliens, "med")
         if self.spawned[2] < hardSpawnLimit // 2:
           self.spawn(hardAliens, "hard")
-        if self.spawned[0] >= medSpawnLimit // 2 and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit // 2 and currentTime - self.lastSpanwed > self.waveCooldown:
+        if self.spawned[0] >= medSpawnLimit // 2 and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit // 2 and currentTime - self.lastSpanwed > self.waveCooldown and self.currentWave < self.totWave:
           self.currentWave += 1
           self.spawned = [0, 0, 0, 0]
           
@@ -195,35 +204,36 @@ class Level:
           self.spawn(medAliens, "med")
         if self.spawned[2] < hardSpawnLimit:
           self.spawn(hardAliens, "hard")
-        if self.spawned[0] >= easySpawnLimit and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit and currentTime - self.lastSpanwed > self.waveCooldown:
+        if self.spawned[0] >= easySpawnLimit and self.spawned[1] >= medSpawnLimit and self.spawned[2] >= hardSpawnLimit and currentTime - self.lastSpanwed > self.waveCooldown and self.currentWave < self.totWave:
           self.currentWave += 1
           self.spawned = [0, 0, 0, 0]
 
   def spawn(self, possibleSpawn: list, difficulty: str):
-    currentTime = pygame.time.get_ticks()
-    self.lastSpanwed = pygame.time.get_ticks()
-    
-    match difficulty:
-      case "easy":
-        if currentTime - self.lastSpawnEasy > self.spawnRateEasy:
-          match possibleSpawn[random.randint(0, len(possibleSpawn) - 1)]: 
-            case "slime":
-              self.aliens.add(Slime(self.getMap(), self))
-          self.lastSpawnEasy = currentTime
-          self.spawned[0] += 1
-      case "med":
-        if currentTime - self.lastSpawnMed > self.spawnRateMed:
-          match possibleSpawn[random.randint(0, len(possibleSpawn) - 1)]: 
-            case "boba":
-              self.aliens.add(BobaAlien(self.getMap(), self))
-          self.lastSpawnMed = currentTime
-          self.spawned[1] += 1
-      case "hard":
-        if currentTime - self.lastSpawnHard > self.spawnRateHard:
-          match possibleSpawn[random.randint(0, len(possibleSpawn) - 1)]: 
-            case "skateboard":
-              self.aliens.add(SkateboardAlien(self.getMap(), self))
-          self.lastSpawnHard = currentTime
-          self.spawned[2] += 1
+    if self.startLevel: 
+      currentTime = pygame.time.get_ticks()
+      self.lastSpanwed = pygame.time.get_ticks()
+      
+      match difficulty:
+        case "easy":
+          if currentTime - self.lastSpawnEasy > self.spawnRateEasy:
+            match possibleSpawn[random.randint(0, len(possibleSpawn) - 1)]: 
+              case "slime":
+                self.aliens.add(Slime(self.getMap(), self))
+            self.lastSpawnEasy = currentTime
+            self.spawned[0] += 1
+        case "med":
+          if currentTime - self.lastSpawnMed > self.spawnRateMed:
+            match possibleSpawn[random.randint(0, len(possibleSpawn) - 1)]: 
+              case "boba":
+                self.aliens.add(BobaAlien(self.getMap(), self))
+            self.lastSpawnMed = currentTime
+            self.spawned[1] += 1
+        case "hard":
+          if currentTime - self.lastSpawnHard > self.spawnRateHard:
+            match possibleSpawn[random.randint(0, len(possibleSpawn) - 1)]: 
+              case "skateboard":
+                self.aliens.add(SkateboardAlien(self.getMap(), self))
+            self.lastSpawnHard = currentTime
+            self.spawned[2] += 1
 
 
