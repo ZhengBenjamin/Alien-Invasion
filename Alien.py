@@ -89,7 +89,7 @@ class Alien(pygame.sprite.Sprite):
           self.level.deductHealth(1)
           self.level.checkDone()
     else: 
-      if self.rect.x > 1260 or self.rect.x < -20 or self.rect.y > 980 or self.rect.y < -20:
+      if self.rect.x > 1260 or self.rect.x < -50 or self.rect.y > 980 or self.rect.y < -50:
         self.kill()
     
     # Updates movement 
@@ -216,7 +216,7 @@ class Alien(pygame.sprite.Sprite):
 
 class Slime(Alien):
   def __init__(self, path, level):
-    super().__init__(15, 1, 1, path, level, "slime", 1.5)
+    super().__init__(15, 4, 1, path, level, "slime", 1.5)
 
 class BobaAlien(Alien):
   def __init__(self, path, level):

@@ -28,7 +28,7 @@ class Start:
 
     self.spawnTowers()
 
-    self.paths = [[[900, 0, "down"]], [[965, 0, "down"]]]
+    self.paths = [[[900, -10, "down"]], [[965, -10, "down"]]]
 
   def getStartStatus(self):
     return self.start
@@ -81,6 +81,9 @@ class Start:
         self.aliens.add(BobaAlien(randomPath, None))
       case "skateboard":
         self.aliens.add(SkateboardAlien(randomPath, None))
+        
+    for alien in self.aliens:
+      alien.setMenu()
 
   def spawnTowers(self):
     towers = [Cannon(None, None, True), Cannon(None, None, True), Catapult(None, None, True), Cannon(None, None, True), Cannon(None, None, True)]
@@ -151,7 +154,7 @@ class Lost:
 
   def spawnAlien(self):
     randomAlien = random.choice(self.availableAliens)
-    randomPath = [[0, random.randint(0, 960), "right"]]
+    randomPath = [[0, random.randint(-10, 960), "right"]]
 
     match randomAlien:
       case "slime":
