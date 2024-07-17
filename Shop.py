@@ -20,6 +20,7 @@ class Shop:
     self.events = None # Events
     self.map = 0 # Current map
     self.occupiedBoxes = [] # List of boxes occupied by towers
+    self.levelStarted = False # If the level has started
 
     self.towerCollection = [Cannon(None, None, False), Bomber(None, None, False), Catapult(None, None, False)]
 
@@ -84,6 +85,7 @@ class Shop:
     self.towers = towers
     self.health = health
     self.occupiedBoxes = occupiedBoxes
+    self.levelStarted = False
 
   # Render methods
 
@@ -108,8 +110,9 @@ class Shop:
     elif self.levelObj.isComplete():
       self.level += 1
       self.startLevel()
-      
-    self.handleStartButton(window)
+    
+    if not self.levelStarted: 
+      self.handleStartButton()
     self.handleSelection()
 
   def shopGUI(self, window):
@@ -122,11 +125,16 @@ class Shop:
     health = self.headerFont.render("Health: " + str(self.levelObj.getHealth()), 1, (255, 255, 255))
     wave = self.headerFont.render("Wave: {}/{}".format(self.levelObj.getCurrentWave() + 1, self.levelObj.getTotWave() + 1), 1, (255, 255, 255))
     shopTitle = self.titleFont.render("Shop", 1, (255, 255, 255))
+    start = self.titleFont.render("Start", 1, (255, 255, 255))
+    
     window.blit(money, (1010, 30))
     window.blit(level, (1010, 55))
     window.blit(health, (1010, 80))
     window.blit(wave, (1010, 105))
     window.blit(shopTitle, (1050, 350))
+    
+    window.blit(start, (1035, 225))
+    window.blit(pygame.image.load("assets/shop/startButton.png"), (1017, 207))
 
     # Draw the buttons for each of the towers
     for tower in list(self.towerButtons.keys()):
@@ -173,11 +181,12 @@ class Shop:
   def selectTower(self, tower):
     self.selectedTower = tower 
   
-  def handleStartButton(self, window):
+  def handleStartButton(self):
     self.startButton.changeColor(pygame.mouse.get_pos())
     
     if Events.getMousePressed() == True and self.startButton.checkForInput(pygame.mouse.get_pos()):
       self.levelObj.start()
+      self.levelStarted = True 
   
   def handleSelection(self):
     if Events.getMousePressed() == True and self.selectedTower == None:
