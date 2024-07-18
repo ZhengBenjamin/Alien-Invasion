@@ -1,11 +1,9 @@
 import pygame
-import os
 from Level import *
 from Tower import *
 from Events import *
 from Toaster import *
 from Button import *
-from pathlib import Path
 
 class Shop:
   

@@ -1,6 +1,5 @@
 import pygame
 import math
-import os 
 
 class Projectile(pygame.sprite.Sprite):
   
@@ -86,7 +85,7 @@ class CannonProj(Projectile):
   
 class BomberProj(Projectile):
   def __init__(self, x, y, target, levelObj):
-    super().__init__(x, y, levelObj, 8, 15, target, pygame.transform.scale2x(pygame.image.load("assets/projectiles/bomberProj.png")), 20)
+    super().__init__(x, y, levelObj, 8, 15, target, pygame.transform.scale2x(pygame.image.load("assets/projectiles/bomberProj.png")), 30)
 
 class CatapultProj(Projectile):
   def __init__(self, x, y, target, levelObj=None):

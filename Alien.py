@@ -1,7 +1,6 @@
 # Alien superclass, parent class for al lthe alien types in the game 
 import pygame
 import random
-import os
 from Sprites import *
 
 class Alien(pygame.sprite.Sprite):

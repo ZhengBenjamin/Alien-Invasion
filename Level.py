@@ -1,6 +1,5 @@
 # Level object that manages all entities
 import pygame
-import os
 from Alien import *
 from Tower import *
 from Projectile import *

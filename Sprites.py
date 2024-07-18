@@ -1,6 +1,5 @@
 import pygame
 import os
-from PIL import Image
 
 # This class will handle spritesheets
 class Sprites:

@@ -1,5 +1,4 @@
 import pygame
-import os
 from Shop import *
 from Level import *
 from Menu import *

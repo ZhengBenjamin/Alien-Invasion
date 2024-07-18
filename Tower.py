@@ -1,6 +1,5 @@
 import pygame
 import math
-import os
 from Projectile import *
 from Events import *
 from Sprites import *
