@@ -12,7 +12,7 @@ from Projectile import *
 from Level import *
 
 pygame.init()
-pygame.display.set_caption("Alien Invaders")  # Title of window
+pygame.display.set_caption("Alien Invasion")  # Title of window
 
 # Global variables
 WIDTH, HEIGHT = 1260, 960  # Window Size
